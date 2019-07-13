@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: #eee;
+            margin: 0;
+        }
+
+        .chart-container {
+            position: absolute;
+            top: 100px;
+            right: 100px;
+            bottom: 100px;
+            left: 100px;
+            background-color: #fff;
+            cursor: move;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chart-container"></div>
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+    // 传入的数据第一层始终是一个数组，需要手动转换为对象结构
+    var relationObj = {
+        name: "ROOT",
+        id: null,
+        children: [
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "description": "",
+                                "dimensionTblDisplayName": "书院成绩（中间表）",
+                                "dimensionTblId": 10,
+                                "dimensionTblName": "worksheet_ad29f62b_db17_4a73_9ac8_5bc89810576f",
+                                "factTblDisplayName": "销售",
+                                "factTblId": 11,
+                                "factTblName": "csv_458ed471_5dd3_4615_914b_d53c303af846_13m1466002078",
+                                "id": 20,
+                                "joinConditions": [
+                                    {
+                                        "dstColDisplayName": "辈分",
+                                        "dstColId": 88,
+                                        "dstColName": "col_1",
+                                        "id": 28,
+                                        "relationId": 20,
+                                        "srcColDisplayName": "品牌",
+                                        "srcColId": 99,
+                                        "srcColName": "col_1"
+                                    }
+                                ],
+                                "joinFilter": "",
+                                "joinType": "INNER JOIN",
+                                "name": "nnn",
+                                "tblId": 11
+                            },
+                            {
+                                "children": [],
+                                "description": "",
+                                "dimensionTblDisplayName": "书院成绩",
+                                "dimensionTblId": 8,
+                                "dimensionTblName": "csv_c5d65680_c16a_488b_ac02_4b5843db8c92_10p1084492069",
+                                "factTblDisplayName": "销售",
+                                "factTblId": 11,
+                                "factTblName": "csv_458ed471_5dd3_4615_914b_d53c303af846_13m1466002078",
+                                "id": 21,
+                                "joinConditions": [
+                                    {
+                                        "dstColDisplayName": "辈分",
+                                        "dstColId": 69,
+                                        "dstColName": "col_0",
+                                        "id": 29,
+                                        "relationId": 21,
+                                        "srcColDisplayName": "品牌",
+                                        "srcColId": 99,
+                                        "srcColName": "col_1"
+                                    }
+                                ],
+                                "joinFilter": "",
+                                "joinType": "INNER JOIN",
+                                "name": "mmm",
+                                "tblId": 11
+                            },
+                            {
+                                "children": [],
+                                "description": "",
+                                "dimensionTblDisplayName": "经纬数据",
+                                "dimensionTblId": 12,
+                                "dimensionTblName": "csv_b94e1537_f467_4669_9b4b_b73b736c9dc1_4p584960322",
+                                "factTblDisplayName": "销售",
+                                "factTblId": 11,
+                                "factTblName": "csv_458ed471_5dd3_4615_914b_d53c303af846_13m1466002078",
+                                "id": 22,
+                                "joinConditions": [
+                                    {
+                                        "dstColDisplayName": "人口",
+                                        "dstColId": 113,
+                                        "dstColName": "col_2",
+                                        "id": 30,
+                                        "relationId": 22,
+                                        "srcColDisplayName": "毛利",
+                                        "srcColId": 108,
+                                        "srcColName": "col_10"
+                                    }
+                                ],
+                                "joinFilter": "",
+                                "joinType": "INNER JOIN",
+                                "name": "ooo",
+                                "tblId": 11
+                            }
+                        ],
+                        "description": "",
+                        "dimensionTblDisplayName": "销售",
+                        "dimensionTblId": 11,
+                        "dimensionTblName": "csv_458ed471_5dd3_4615_914b_d53c303af846_13m1466002078",
+                        "factTblDisplayName": "各个地区的销售数据",
+                        "factTblId": 3,
+                        "factTblName": "csv_f40edcc4_b35a_4086_8f26_751e23502ebb_9m1564598987",
+                        "id": 19,
+                        "joinConditions": [
+                            {
+                                "dstColDisplayName": "销售额",
+                                "dstColId": 109,
+                                "dstColName": "col_11",
+                                "id": 27,
+                                "relationId": 19,
+                                "srcColDisplayName": "销售额",
+                                "srcColId": 30,
+                                "srcColName": "col_5"
+                            }
+                        ],
+                        "joinFilter": "",
+                        "joinType": "INNER JOIN",
+                        "name": "uuuu",
+                        "tblId": 3
+                    }
+                ],
+                "description": "",
+                "dimensionTblDisplayName": "各个地区的销售数据",
+                "dimensionTblId": 3,
+                "dimensionTblName": "csv_f40edcc4_b35a_4086_8f26_751e23502ebb_9m1564598987",
+                "factTblDisplayName": "电商销售数据",
+                "factTblId": 1,
+                "factTblName": "csv_63954ef0_740d_4112_82e8_2c89c2d63aa4_18m211168975",
+                "id": 13,
+                "joinConditions": [
+                    {
+                        "dstColDisplayName": "大区",
+                        "dstColId": 25,
+                        "dstColName": "col_0",
+                        "id": 19,
+                        "relationId": 13,
+                        "srcColDisplayName": "目的区域",
+                        "srcColId": 7,
+                        "srcColName": "col_6"
+                    }
+                ],
+                "joinFilter": "",
+                "joinType": "INNER JOIN",
+                "name": "AAA",
+                "tblId": 1
+            },
+            {
+                "children": [
+                    {
+                        "children": [
+                            {
+                                "children": [],
+                                "description": "",
+                                "dimensionTblDisplayName": "主机状态表",
+                                "dimensionTblId": 14,
+                                "dimensionTblName": "csv_e7e64190_0838_4756_9953_a45c4cea1df4_6p2060556259",
+                                "factTblDisplayName": "各城市供销状况",
+                                "factTblId": 15,
+                                "factTblName": "csv_becdf153_f7bd_4eb0_9ac4_771e300799d7_3m1545628878",
+                                "id": 25,
+                                "joinConditions": [
+                                    {
+                                        "dstColDisplayName": "device_id",
+                                        "dstColId": 121,
+                                        "dstColName": "col_0",
+                                        "id": 33,
+                                        "relationId": 25,
+                                        "srcColDisplayName": "销量",
+                                        "srcColId": 129,
+                                        "srcColName": "col_2"
+                                    }
+                                ],
+                                "joinFilter": "",
+                                "joinType": "INNER JOIN",
+                                "name": "opop",
+                                "tblId": 15
+                            }
+                        ],
+                        "description": "",
+                        "dimensionTblDisplayName": "各城市供销状况",
+                        "dimensionTblId": 15,
+                        "dimensionTblName": "csv_becdf153_f7bd_4eb0_9ac4_771e300799d7_3m1545628878",
+                        "factTblDisplayName": "北京二手房",
+                        "factTblId": 4,
+                        "factTblName": "csv_547ce57c_68dd_4f16_ab39_98392cc9dd8a_13m1466002078",
+                        "id": 24,
+                        "joinConditions": [
+                            {
+                                "dstColDisplayName": "城市_供_",
+                                "dstColId": 127,
+                                "dstColName": "col_0",
+                                "id": 32,
+                                "relationId": 24,
+                                "srcColDisplayName": "城区",
+                                "srcColId": 35,
+                                "srcColName": "col_1"
+                            }
+                        ],
+                        "joinFilter": "",
+                        "joinType": "INNER JOIN",
+                        "name": "fgt",
+                        "tblId": 4
+                    }
+                ],
+                "description": "",
+                "dimensionTblDisplayName": "北京二手房",
+                "dimensionTblId": 4,
+                "dimensionTblName": "csv_547ce57c_68dd_4f16_ab39_98392cc9dd8a_13m1466002078",
+                "factTblDisplayName": "电商销售数据",
+                "factTblId": 1,
+                "factTblName": "csv_63954ef0_740d_4112_82e8_2c89c2d63aa4_18m211168975",
+                "id": 15,
+                "joinConditions": [
+                    {
+                        "dstColDisplayName": "小区名称",
+                        "dstColId": 45,
+                        "dstColName": "col_11",
+                        "id": 22,
+                        "relationId": 15,
+                        "srcColDisplayName": "目的城市",
+                        "srcColId": 9,
+                        "srcColName": "col_8"
+                    }
+                ],
+                "joinFilter": "",
+                "joinType": "INNER JOIN",
+                "name": "CCC",
+                "tblId": 1
+            },
+            {
+                "children": [],
+                "description": "",
+                "dimensionTblDisplayName": "全国各地经纬度",
+                "dimensionTblId": 13,
+                "dimensionTblName": "csv_59360886_8e57_4036_83ce_f7a9d4d5ce2b_6p2060556259",
+                "factTblDisplayName": "电商销售数据",
+                "factTblId": 1,
+                "factTblName": "csv_63954ef0_740d_4112_82e8_2c89c2d63aa4_18m211168975",
+                "id": 23,
+                "joinConditions": [
+                    {
+                        "dstColDisplayName": "地市",
+                        "dstColId": 116,
+                        "dstColName": "col_1",
+                        "id": 31,
+                        "relationId": 23,
+                        "srcColDisplayName": "目的城市",
+                        "srcColId": 9,
+                        "srcColName": "col_8"
+                    }
+                ],
+                "joinFilter": "",
+                "joinType": "INNER JOIN",
+                "name": "iii",
+                "tblId": 1
+            }
+        ]
+    };
+
+    // relations数据转换，传入jsonTree结构
+    var translateRetions = function (relationObj) {
+        var relationWidth = 1,
+            columnColors = {},
+            columnIndex = 0,
+            colorSets = ["#37a2da", "#67e0e3", "#ffdb5c", "#ff9f7f", "#e062ae", "#ea6a6a", "#97c979", "#fb8d34", "#feebae", "#fdcf84", "#48b788", "#9f4ef4", "#7894ea"];
+
+        var colors = function (i) {
+            return colorSets[i];
+        }
+
+        var getRetionsData = function (relationObj) {
+            var translateData = {}, relations = relationObj.children;
+
+            translateData.id = relationObj.id;
+            translateData.name = relationObj.name;
+            translateData.children = [];
+
+            relations.forEach(function (relation) {
+                // 拆分根节点的table
+                var isFirstTable = false, curFirstTable;
+                for (var i = 0; i < translateData.children.length; i++) {
+                    var table = translateData.children[i];
+                    if (table.id === relation.factTblId) {
+                        isFirstTable = true;
+                        curFirstTable = table;
+                        break;
+                    };
+                }
+                if (!isFirstTable) {
+                    translateData.children.push({
+                        id: relation.factTblId,
+                        name: relation.factTblDisplayName,
+                        columns: [],
+                        relationIds: [],
+                        children: []
+                    });
+
+                    var length = translateData.children.length;
+                    curFirstTable = translateData.children[length - 1];
+                    if (length > 1) relationWidth++;
+                }
+
+                if (curFirstTable.relationIds.indexOf(relation.id) === -1) {
+                    curFirstTable.relationIds.push(relation.id);
+                }
+
+                relation.joinConditions.forEach(function (condition) {
+                    var isFirstColumn = false, curFirstColumn,
+                        isSecondTable = false, curSecondTable,
+                        isSecondColumn = false, curSecondColumn;
+
+                    if (columnColors[condition.srcColId]) {
+                        columnColors[condition.dstColId] = columnColors[condition.srcColId];
+                        columnIndex++;
+                    } else if (columnColors[condition.dstColId]) {
+                        columnColors[condition.srcColId] = columnColors[condition.dstColId];
+                        columnIndex++;
+                    } else {
+                        columnColors[condition.srcColId] = colors(columnIndex);
+                        columnColors[condition.dstColId] = colors(columnIndex);
+                        columnIndex++;
+                    }
+
+                    // 根节点table的关联columns信息
+                    for (var i = 0; i < curFirstTable.columns.length; i++) {
+                        var column = curFirstTable.columns[i];
+                        if (column.id === condition.srcColId) {
+                            isFirstColumn = true;
+                            curFirstColumn = column;
+                            break;
+                        }
+                    }
+                    if (!isFirstColumn) {
+                        curFirstTable.columns.push({
+                            id: condition.srcColId,
+                            name: condition.srcColDisplayName,
+                            relationIds: []
+                        });
+                        curFirstColumn = curFirstTable.columns[curFirstTable.columns.length - 1];
+                    }
+                    if (curFirstColumn.relationIds.indexOf(relation.id) === -1) {
+                        curFirstColumn.relationIds.push(relation.id);
+                    }
+
+                    // 根节点table的关联tables信息
+                    for (var i = 0; i < curFirstTable.children.length; i++) {
+                        var table = curFirstTable.children[i];
+                        if (table.id === condition.dimensionTblId) {
+                            isSecondTable = true;
+                            curSecondTable = table;
+                            break;
+                        }
+                    }
+                    if (!isSecondTable) {
+                        curFirstTable.children.push({
+                            id: relation.dimensionTblId,
+                            name: relation.dimensionTblDisplayName,
+                            columns: [],
+                            relationIds: [],
+                            srcRelation: {
+                                id: condition.relationId,
+                                name: relation.name,
+                                joinType: relation.joinType
+                            }
+                        });
+
+                        var length = curFirstTable.children.length;
+                        curSecondTable = curFirstTable.children[length - 1];
+                        if (length > 1) relationWidth++;
+                    }
+                    if (curSecondTable.relationIds.indexOf(relation.id) === -1) {
+                        curSecondTable.relationIds.push(relation.id);
+                    }
+
+                    // 根节点table的关联tables的columns信息
+                    for (var i = 0; i < curSecondTable.columns.length; i++) {
+                        var column = curSecondTable.columns[i];
+                        if (column.id === condition.dstColId) {
+                            isSecondColumn = true;
+                            curSecondColumn = column;
+                            break;
+                        }
+                    }
+                    if (!isSecondColumn) {
+                        curSecondTable.columns.push({
+                            id: condition.dstColId,
+                            name: condition.dstColDisplayName,
+                            relationIds: []
+                        });
+                        curSecondColumn = curSecondTable.columns[curSecondTable.columns.length - 1];
+                    }
+                    if (curSecondColumn.relationIds.indexOf(relation.id) === -1) {
+                        curSecondColumn.relationIds.push(relation.id);
+                    }
+
+                    // 获取第三级数据
+                    if (relation.children && relation.children.length > 0) {
+                        var nextInfo = {
+                            name: curSecondTable.name,
+                            id: curSecondTable.id,
+                            children: relation.children
+                        },
+                            data = getRetionsData(nextInfo),
+                            nextCurSecondTable = data.children[0];
+
+                        // 合并数据
+                        for (var i = 0; i < nextCurSecondTable.columns.length; i++) {
+                            var newColumn = nextCurSecondTable.columns[i], hasFlag = false;
+                            for (var j = 0; j < curSecondTable.columns.length; j++) {
+                                var column = curSecondTable.columns[j];
+                                if (column.id === newColumn.id) {
+                                    hasFlag = true;
+                                    column.relationIds = column.relationIds.concat(newColumn.relationIds)
+                                    break;
+                                }
+                            }
+                            if (!hasFlag) curSecondTable.columns.push(newColumn);
+                        }
+                        curSecondTable.relationIds = curSecondTable.relationIds.concat(nextCurSecondTable.relationIds);
+                        curSecondTable.children = nextCurSecondTable.children;
+                    };
+
+                });
+
+            });
+
+            return translateData;
+        }
+
+        var getMaxFloor = function (treeData) {
+            var max = 0;
+            var each = function (data, floor) {
+                data.forEach(function (e) {
+                    e.floor = floor
+                    if (floor > max) max = floor;
+                    if (e.children && e.children.length > 0) each(e.children, floor + 1);
+                })
+            };
+            each(treeData, 1);
+            return max;
+        }
+
+        var relationData = getRetionsData(relationObj);
+
+        return {
+            relationWidth: relationWidth,
+            relationHeight: getMaxFloor(relationData.children),
+            relationData: relationData,
+            columnColors: columnColors
+        }
+    }
+
+    // 计算关联线的路径
+    var getLinkPath = function (d) {
+        var boxCount = d.source.columns ? d.source.columns.length + 1 : 1,
+            sourceX = d.source.x,
+            sourceY = d.source.y + boxHeight * boxCount,
+            targetX = d.target.x,
+            targetY = d.target.y;
+
+        return "M" + sourceX + "," + sourceY + "V" + ((targetY - sourceY) / 2 + sourceY) + "H" + targetX + "V" + targetY;
+    }
+
+    var container = $(".chart-container"),
+        svgWidth = container.width(),
+        svgHeight = container.height(),
+        boxWidth = 150, // 表格单元格宽度
+        boxHeight = 40, // 表格单元格高度
+        widthStep = 200, // 每条关联链的宽度
+        heightStep = 400, // 每层关联关系所占高度
+        translateData = translateRetions(relationObj); // translateData为转换后的相关数据
+
+    console.log(translateData);
+
+    var dataset = translateData.relationData, // 关联关系nodes数据
+        columnColors = translateData.columnColors, // 每个关联列的颜色
+        relalatonsContainerWidth = translateData.relationWidth * widthStep, // nodes数据宽度
+        relalatonsContainerHeight = translateData.relationHeight * heightStep; // nodes数据高度
+
+    // 缩放及平移
+    var zoom = d3.behavior.zoom()
+        .scaleExtent([0.1, 1])
+        .on('zoom', function () {
+            relationsContainer.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+        });
+
+    // 添加画布，使用缩放及平移 
+    var svg = d3.select(container[0]).append("svg")
+        .attr("class", "relationship-chart")
+        .attr("width", "100%")
+        .attr("height", svgHeight)
+        .style("cursor", "move")
+        .style("font-size", "13")
+        .call(zoom);
+
+    // 箭头标记
+    svg.append("marker")
+        .attr("id", "resolved")
+        .attr("markerUnits", "userSpaceOnUse") // 设置为strokeWidth箭头会随着线的粗细发生变化
+        .attr("viewBox", "0 -5 10 10") // 坐标系的区域
+        .attr("refX", 0) // 箭头坐标
+        .attr("refY", 0)
+        .attr("markerWidth", 12) // 标识的大小
+        .attr("markerHeight", 12)
+        .attr("orient", "auto") // 绘制方向，可设定为：auto（自动确认方向）和 角度值
+        .attr("stroke-width", 1.5) // 箭头宽度
+        .append("path")
+        .attr("d", "M0,0L10,5L10,-5") // 箭头的路径
+        .attr('fill', '#4a4a4a'); // 箭头颜色
+
+    // 使用树形图布局
+    var tree = d3.layout.tree()
+        .size([relalatonsContainerWidth, relalatonsContainerHeight])
+        .separation(function () { return 0.5; })
+        .value(function (d) {
+            return d.children && d.children.length || 1; // 使用children长度作为分区大小的标准
+        });
+
+    var nodes = tree.nodes(dataset), // 用于画节点的数据
+        links = tree.links(nodes); // 用于画节点连接线的数据
+
+    // console.log(nodes);
+    // console.log(links);
+
+    var relationsContainer = svg.append("g")
+        .attr("class", "relations-container");
+
+    var node = relationsContainer.selectAll("g.r-table")
+        .data(nodes);
+
+    // 绘制关联表
+    var tablesEnter = node.enter()
+        .append("g")
+        .attr("class", "r-tables")
+        .style("cursor", "pointer")
+        .filter(function (d) {
+            return d.depth > 0;
+        })
+        .attr("source-tid", function (d) {
+            return d.parent && d.parent.id || "";
+        })
+        .attr("target-tid", function (d) {
+            return d.id;
+        });
+
+    // 绘制关联表名
+    var tableTitle = tablesEnter
+        .append("g")
+        .attr("class", "r-title")
+        .attr("relation-id", function (d) {
+            return d.relationIds && d.relationIds.join(",");
+        })
+        .on("mouseover", function (d) {
+            var self = $(this),
+                curRelationIds = d.relationIds,
+                container = self.parent().parent(),
+                curColumns = container.find("g.r-columns").filter(function () {
+                    var g = $(this),
+                        relationIds = g.attr("relation-id").split(",").map(function (e) { return parseFloat(e) }),
+                        rFlag = false;
+
+                    for (var i = 0; i < curRelationIds.length; i++) {
+                        for (var j = 0; j < relationIds.length; j++) {
+                            if (curRelationIds[i] === relationIds[j]) rFlag = true;
+                        }
+                    }
+
+                    return rFlag;
+                }),
+                curLinks = container.find("g.r-link").filter(function () {
+                    var g = $(this),
+                        rid = parseFloat(g.attr("relation-id"));
+
+                    return curRelationIds.indexOf(rid) > -1;
+                });
+
+            curColumns.find("rect").css("fill-opacity", 1);
+            curColumns.find("text").css("fill", "#fff");
+            curLinks.find("text").css("fill-opacity", 1);
+        })
+        .on("mouseout", function (d) {
+            var self = $(this),
+                container = self.parent().parent(),
+                columns = container.find("g.r-columns"),
+                links = container.find("g.r-link");
+
+            columns.find("rect").css("fill-opacity", 0);
+            columns.find("text").css("fill", "#333");
+            links.find("text").css("fill-opacity", 0);
+        });
+
+    tableTitle
+        .append("rect")
+        .attr("fill", "#eee")
+        .attr("stroke", "#4a4a4a")
+        .attr("stroke-width", "1px")
+        .attr("y", 0)
+        .attr("x", function (d) {
+            return -(boxWidth / 2);
+        })
+        .attr("width", function (d) {
+            return boxWidth;
+        })
+        .attr("height", function (d) {
+            return boxHeight;
+        });
+
+    tableTitle.append("text")
+        .attr("dx", "10px")
+        .attr("dy", "10px")
+        .attr("transform", function () {
+            return "translate(" + (-boxWidth / 2) + ", 15)";
+        })
+        .attr("text-anchor", "strat")
+        .text(function (d, i) {
+            return d.name;
+        });
+
+    // 绘制关联列
+    var columnsEnter = tablesEnter.selectAll("g.r-columns")
+        .data(function (d) {
+            return d.columns || [];
+        })
+        .enter()
+        .append("g")
+        .attr("class", "r-columns")
+        .attr("column-id", function (d) {
+            return d.id;
+        })
+        .attr("relation-id", function (d) {
+            return d.relationIds && d.relationIds.join(",");
+        })
+        .attr("transform", function (d, i) {
+            return "translate(0 , " + boxHeight * (i + 1) + ")";
+        })
+        .style("fill", "#fff")
+        .on("mouseover", function (d) {
+            var self = $(this),
+                curRelationIds = d.relationIds,
+                container = self.parent().parent(),
+                curColumns = container.find("g.r-columns").filter(function () {
+                    var g = $(this),
+                        relationIdsStr = g.attr("relation-id") || null,
+                        relationIds = relationIdsStr.split(",").map(function (e) { return parseFloat(e) }),
+                        rFlag = false;
+
+                    for (var i = 0; i < curRelationIds.length; i++) {
+                        for (var j = 0; j < relationIds.length; j++) {
+                            if (curRelationIds[i] === relationIds[j]) rFlag = true;
+                        }
+                    }
+
+                    return rFlag;
+                }),
+                curLinks = container.find("g.r-link").filter(function () {
+                    var g = $(this),
+                        relationIdsStr = g.attr("relation-id") || null,
+                        rid = parseFloat(relationIdsStr);
+
+                    return curRelationIds.indexOf(rid) > -1;
+                });
+
+            curColumns.find("rect").css("fill-opacity", 1);
+            curColumns.find("text").css("fill", "#fff");
+            curLinks.find("text").css("fill-opacity", 1);
+
+        })
+        .on("mouseout", function (d) {
+            var self = $(this),
+                container = self.parent().parent(),
+                columns = container.find("g.r-columns"),
+                links = container.find("g.r-link");
+
+            columns.find("rect").css("fill-opacity", 0);
+            columns.find("text").css("fill", "#333");
+            links.find("text").css("fill-opacity", 0);
+        });
+
+    columnsEnter.append("rect")
+        .attr("fill", function (d) {
+            return columnColors[d.id];
+        })
+        .attr("stroke", "#4a4a4a")
+        .attr("stroke-width", "1px")
+        .attr("y", 0)
+        .attr("x", function (d) {
+            return -(boxWidth / 2);
+        })
+        .attr("width", function (d) {
+            return boxWidth;
+        })
+        .attr("height", function (d) {
+            return boxHeight;
+        })
+        .style("fill-opacity", 0);
+
+    columnsEnter.append("text")
+        .attr("dx", "10px")
+        .attr("dy", "10px")
+        .attr("transform", function () {
+            return "translate(" + (-boxWidth / 2) + ", 15)";
+        })
+        .attr("text-anchor", "strat")
+        .style("fill", "#333")
+        .text(function (d, i) {
+            return d.name;
+        });
+
+    node.attr("transform", function (d) {
+        return "translate(" + ((svgWidth - relalatonsContainerWidth) / 2 + d.x) + "," + (50 - heightStep + d.y) + ")";
+    });
+
+    // 画关联线
+    var links = relationsContainer.selectAll("g.r-link")
+        .data(links)
+        .enter()
+        .append("g")
+        .attr("class", "r-link")
+        .style("cursor", "pointer")
+        .filter(function (d) {
+            return d.source.depth > 0;
+        })
+        .attr("relation-id", function (d) {
+            return d.target.srcRelation && d.target.srcRelation.id;
+        })
+        .attr("source-tid", function (d) {
+            return d.source.id || "";
+        })
+        .attr("transform", "translate(" + ((svgWidth - relalatonsContainerWidth) / 2) + ", " + (50 - heightStep) + ")")
+        .on("mouseover", function (d) {
+            var self = $(this),
+                rid = d.target.srcRelation && d.target.srcRelation.id || null,
+                curColumns = self.siblings().find("g.r-columns").filter(function () {
+                    var g = $(this),
+                        relationIdsStr = g.attr("relation-id") || null,
+                        relationIds = relationIdsStr.split(",").map(function (e) { return parseFloat(e) });
+                    return rid && relationIds.indexOf(rid) > -1;
+                });
+            curColumns.find("rect").css("fill-opacity", 1);
+            curColumns.find("text").css("fill", "#fff");
+            self.find("text").css("fill-opacity", 1);
+        })
+        .on("mouseout", function (d) {
+            var self = $(this),
+                columns = self.siblings().find("g.r-columns");
+            columns.find("rect").css("fill-opacity", 0);
+            columns.find("text").css("fill", "#333");
+            self.find("text").css("fill-opacity", 0);
+        });
+
+    links.append("path")
+        .attr("stroke", "#4a4a4a")
+        .attr("stroke-width", "1px")
+        .attr("fill", "none")
+        .attr("d", getLinkPath)
+        .attr("marker-start", "url(#resolved)");
+
+    links.append("text")
+        .attr("x", function (d, i) {
+            return d.target.x;
+        })
+        .attr("y", function (d, i) {
+            return d.target.y;
+        })
+        .attr("text-anchor", "start")
+        .attr("fill", "red")
+        .attr("transform", function (d) {
+            return "rotate(-90, " + d.target.x + ", " + d.target.y + ") translate(10,-7)"
+        })
+        .style("fill-opacity", "0")
+        .text(function (d, i) {
+            return d.target.srcRelation && d.target.srcRelation.name;
+        })
+        .style("font-size", "12")
+        .on("click", function (d) {
+            console.log(d.target.srcRelation && d.target.srcRelation.id || null)
+        });
+
+</script>
+
+</html>

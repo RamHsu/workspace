@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <style>
+            body {
+                margin: 0;
+            }
+
+            ul, li  {
+                padding: 0;
+                list-style: none
+            }
+
+            .chart-container {
+                position: absolute;
+                top: 100px;
+                right: 100px;
+                bottom: 100px;
+                left: 100px;
+            }
+
+            .chart-container ul {
+                width: 100%;
+            }
+
+            .chart-container li {
+                height: 30px;
+                /* border: 1px solid #000; */
+            }
+        </style>
+    </head>
+    <body>
+        <div class="chart-container">
+            <ul></ul>
+        </div>
+    </body>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="FancyColor.js"></script>
+    <script>
+        let _FancyColor = new FancyColor({
+            startColor: "rgba(20, 20, 20, 0.7)",
+            endColor: "rgba(200, 200, 200, 0.3)",
+            step: 10
+        });
+        let colors = _FancyColor.getGradientColor();
+        let innerStr = "";
+        for (let i = 0; i < colors.length; i++) {
+            innerStr += "<li style='background-color: " + colors[i] + ";'></li>"
+        }
+        $(".chart-container ul").append(innerStr);
+    </script>
+</html>

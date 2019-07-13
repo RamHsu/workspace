@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script>
+    var width = 550,
+      height = 750,
+      cellSize = 45;
+
+    var formatPercent = d3.format(".1%");
+
+    var color = d3.scaleQuantize()
+      .domain([0, 100])
+      .range(["#ffffff", "#e6f7ff", "#b3e6ff", "#99ddff", "#66ccff", "#4dc3ff", "#1ab2ff", "#0077b3", "#004466"]);
+
+    var month_strings = ["January", "February", "March"]
+
+    var svg = d3.select("body")
+      .selectAll("svg")
+      .data([2018])
+      .enter().append("svg")
+      .attr("width", width)
+      .attr("height", height)
+      .append("g")
+      .attr("transform", "translate(" + ((width - cellSize * 5) / 2) + "," + (height - cellSize * 16 - 1) + ")");
+
+    svg.append("text")
+      .attr("transform", "translate(-10," + cellSize * 3 + ")rotate(-90)")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 20)
+      .attr("text-anchor", "middle")
+      .text(month_strings[0]);
+
+    svg.append("text")
+      .attr("transform", "translate(-10," + cellSize * 7 + ")rotate(-90)")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 20)
+      .attr("text-anchor", "middle")
+      .text(month_strings[1]);
+
+    svg.append("text")
+      .attr("transform", "translate(-10," + cellSize * 11 + ")rotate(-90)")
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 20)
+      .attr("text-anchor", "middle")
+      .text(month_strings[2]);
+
+    var g = svg.append("g")
+      .attr("fill", "none")
+      .attr("stroke", "#d2d4d8")
+      .selectAll("g")
+      .data(function(d) {
+        return d3.timeDays(new Date(2018, 0, 1), new Date(2018, 3, 1));
+      })
+      .enter()
+      .append("g")
+      .attr("transform", function(d){
+        var x = d.getDay() * cellSize,
+            y = d3.timeWeek.count(d3.timeYear(d), d) * cellSize;
+        return "translate(" + x + "," + y + ")";
+      })
+      
+    var rect = g.append("rect")
+      .attr("width", cellSize)
+      .attr("height", cellSize)
+      .attr("class", "hour bordered")
+      .attr("rx", 4)
+      .attr("ry", 4)
+      .datum(d3.timeFormat("%Y-%m-%d"));
+      
+    g.append("text")
+      .text(function(d){
+        return d.getDate();
+      })
+      .attr("y", cellSize)
+      .style("font-family", "arial")
+      .style("font-size", "8pt")
+
+    svg.append("g")
+      .attr("fill", "none")
+      .attr("stroke", "#000")
+      .selectAll("path")
+      .data(function(d) {
+        return d3.timeMonths(new Date(2018, 0, 1), new Date(2018, 3, 1));
+      })
+      .enter().append("path")
+      .attr("d", pathMonth);
+
+    /* d3.csv("dji.csv", function(error, csv) {
+      if (error) throw error;
+
+      var data = d3.nest()
+        .key(function(d) {
+          return d.Date;
+        })
+        .rollup(function(d) {
+          return (d[0].Close - d[0].Open) / d[0].Open;
+        })
+        .object(csv);
+
+      rect.filter(function(d) {
+          return d in data;
+        })
+        .attr("fill", function(d) {
+          return color(data[d]);
+        })
+        .append("title")
+        .text(function(d) {
+          return d + ": " + formatPercent(data[d]);
+        });
+    }); */
+
+    function pathMonth(t0) {
+      var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
+        d0 = t0.getDay(),
+        w0 = d3.timeWeek.count(d3.timeYear(t0), t0),
+        d1 = t1.getDay(),
+        w1 = d3.timeWeek.count(d3.timeYear(t1), t1);
+      return "M" + d0 * cellSize + "," + (w0) * cellSize + "H" + 7 * cellSize + "V" + (w1) * cellSize + "H" + (d1 + 1) * cellSize + "V" + (w1 + 1) * cellSize + "H" + 0 + "V" + (w0 + 1) * cellSize + "H" + d0 * cellSize + "Z";
+    }
+
+    /* var start_box = svg.append("rect")
+      .attr("x", 225)
+      .attr("y", 45)
+      .attr("width", cellSize)
+      .attr("height", cellSize)
+      .attr("rx", 4)
+      .attr("ry", 4)
+      .attr("class", "hour bordered")
+      .style("fill", "#FFD700"); */
+  </script>
+</body>
+
+</html>

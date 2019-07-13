@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>Condegram Spiral Plot</title>
+        <style>
+            body {
+                font-family: "Lucida Grande", "Lucida Sans Unicode", "Geneva",
+                    "Verdana", sans-serif;
+                margin: 40px;
+            }
+            #chart {
+                text-align: center;
+            }
+            .axis path {
+                fill: none;
+                stroke: #999;
+                stroke-dasharray: 2 3;
+            }
+            .axis text {
+                font-size: 13px;
+                stroke: #222;
+            }
+            text.title {
+                font-size: 24px;
+            }
+            circle.tick {
+                fill: #f3f3f3;
+                stroke: #999;
+                stroke-dasharray: 2 3;
+            }
+            path.spiral {
+                fill: none;
+                stroke: #ee8d18;
+                stroke-width: 3px;
+            }
+
+            .tooltip {
+                background: #eee;
+                box-shadow: 0 0 5px #999999;
+                color: #333;
+                font-size: 12px;
+                left: 130px;
+                padding: 10px;
+                position: absolute;
+                text-align: center;
+                top: 95px;
+                z-index: 10;
+                display: block;
+                opacity: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="chart"></div>
+    </body>
+    <script src="https://d3js.org/d3.v3.js"></script>
+    <script>
+        var width = 800,
+            height = 600,
+            r = d3.min([width, height]) / 2 - 40,
+            numSpirals = 3; // 螺旋的圈数
+
+        var color = d3.scale.category20();
+
+        var N = 365,
+            someData = [];
+        for (var i = 0; i < N; i++) {
+            var currentDate = new Date();
+            currentDate.setDate(currentDate.getDate() + i);
+            someData.push({
+                date: currentDate,
+                value: Math.random(),
+                group: currentDate.getMonth()
+            });
+        }
+
+        var svg = d3
+            .select("#chart")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        var chartset = svg
+            .append("g")
+            .attr("class", "chartset_1")
+            .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+        // 画圆形背景
+        var pie = d3.layout.pie().value(function() { return 1; });
+        var piedata = pie([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]);
+
+        var arc = d3.svg
+            .arc()
+            .innerRadius(0)
+            .outerRadius(r);
+
+        var color = d3.scale.category20();
+        var pieContainer = chartset.append("g").attr("class", "pie-container");
+        var arcs = pieContainer
+            .selectAll("g")
+            .data(piedata)
+            .enter()
+            .append("g");
+        arcs.append("path")
+            .attr("fill", "none")
+            .attr("stroke", "pink")
+            /* .attr("stroke", "lightskyblue")
+            .attr("stroke-width", "0.5px") */
+            .attr("stroke-opacity", "0.3")
+            .attr("d", function(d) {
+                return arc(d);
+            });
+
+        // 画径向线
+        var start = 0,
+            end = 2,
+            slice = r / (numSpirals + 2);
+        var points = d3.range(0, end + 0.001, (end - start) / 1000);
+        var radius = d3.scale
+            .linear()
+            .domain([start, end])
+            .range([slice, r - slice]);
+        var spiral = d3.svg.line
+            .radial()
+            .angle(function(r) {
+                return numSpirals * Math.PI * r;
+            })
+            .radius(radius);
+        var radialLine = chartset.append("g").attr("class", "radial-line");
+        var path = radialLine
+            .append("path")
+            .datum(points)
+            .attr("id", "spiral")
+            .attr("d", spiral)
+            .style("fill", "none")
+            .style("stroke", "deepskyblue");
+
+        // 画柱子
+        var spiralLength = path.node().getTotalLength();
+        var barWidth = spiralLength / N;
+
+        var timeScale = d3.time.scale()
+            .domain(d3.extent(someData, function(d) { return d.date; }))
+            .range([0, spiralLength]);
+
+        var yScale = d3.scale.linear()
+            .domain([0, d3.max(someData, function(d) { return d.value; })])
+            .range([0, slice]);
+
+        var radialRect = chartset.append("g").attr("class", "radial-rect");
+        radialRect.selectAll("rect")
+            .data(someData)
+            .enter()
+            .append("rect")
+            .attr("x", function(d, i) {
+                var linePer = timeScale(d.date),
+                    posOnLine = path.node().getPointAtLength(linePer + barWidth),
+                    angleOnLine = path.node().getPointAtLength(linePer);
+                    
+                console.log(posOnLine);
+
+                d.linePer = linePer;
+                d.x = posOnLine.x;
+                d.y = posOnLine.y;
+                d.a = (Math.atan2(angleOnLine.y, angleOnLine.x) * 180) / Math.PI - 90;
+
+                return d.x;
+            })
+            .attr("y", function(d) {
+                return d.y;
+            })
+            .attr("width", function(d) {
+                return barWidth;
+            })
+            .attr("height", function(d) {
+                return yScale(d.value);
+            })
+            .style("fill", function(d) {
+                return color(d.group);
+            })
+            .style("stroke", "none")
+            .attr("transform", function(d) {
+                return "rotate(" + d.a + "," + d.x + "," + d.y + ")";
+            });
+    </script>
+</html>

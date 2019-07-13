@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title></title>
+    </head>
+    <body>
+        <script type="text/javascript">
+            String.prototype.format = function(obj) {
+                var self = this;
+                if (typeof obj === "object") {
+                    for (var attr in obj) {
+                        self = self.replace("{" + attr + "}", obj[attr]);
+                    }
+                    // return self.replace(/\{(\d+)\}/g, "");
+                    return self;
+                } else {
+                    var arr = [].slice.call(arguments); // [].slice.call(arguments)能将具有length属性的对象转成数组
+                    return self.format(arr).toString(); // 这里返回的是String对象，所以要转为字符串
+                }
+            };
+
+            function format(str, obj) {
+                if (typeof obj === "object") {
+                    for (var attr in obj) {
+                        str = str.replace("{" + attr + "}", obj[attr]);
+                    }
+                    // return str.replace(/\{(\d+)\}/g, "");
+                    return str;
+                } else {
+                    var arr = [].slice.call(arguments, 1);
+                    return format(str, arr);
+                }
+            }
+
+            var str = "{0}你好，我是{1}，我今年{2}岁了";
+
+            console.log(str.format({ 0: "Cupid", 1: "Tina", 2: 18 }));
+            console.log(str.format(["Cupid", "Tina", 18]));
+            console.log(str.format("Cupid", "Tina", 18));
+            console.log(str.format());
+
+            console.log(format(str, { 0: "Cupid", 1: "Tina", 2: 18 }));
+            console.log(format(str, ["Cupid", "Tina", 18]));
+            console.log(format(str, "Cupid", "Tina", 18));
+            console.log(format(str));
+        </script>
+    </body>
+</html>

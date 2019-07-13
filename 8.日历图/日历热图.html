@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Calendar</title>
+        <style>
+            body {
+                margin: 0;
+                background-color: #eee;
+            }
+            .chart-container {
+                position: absolute;
+                top: 100px;
+                right: 100px;
+                bottom: 100px;
+                left: 100px;
+                background-color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="chart-container"></div>
+    </body>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script>
+        var chartContainer = d3.select(".chart-container");
+        var width = parseFloat(chartContainer.style("width"));
+        var height = parseFloat(chartContainer.style("height"));
+        var cellSize = 20;
+
+        var color = d3.scale
+            .quantize()
+            .domain([0, 100])
+            .range([
+                "red",
+                "orange",
+                "yellow",
+                "green",
+                "cyan",
+                "blue",
+                "purple"
+            ]);
+
+        var svg = chartContainer
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+
+        var yearsGroup = svg
+            .selectAll("g")
+            .data(d3.range(2017, 2020))
+            .enter()
+            .append("g")
+            .attr("transform", function(d, i) {
+                return "translate(0, " + (cellSize * 8 * i + 20) + ")";
+            });
+
+        // 定义每个年份对应的group旁边的标签
+        yearsGroup
+            .append("text")
+            //定义标签文字(年份)的位置以及文字的旋转角度、文字内容
+            .attr(
+                "transform",
+                "translate(16, " + cellSize * 3.5 + ") rotate(-90)"
+            )
+            .attr("font-size", 12)
+            .attr("text-anchor", "middle")
+            .text(function(d) {
+                return d;
+            });
+
+        // 定义每个年份中代表天的小方格
+        var rect = yearsGroup
+            .append("g")
+            .attr("transform", "translate(24, 0)")
+            .selectAll("rect")
+            //计算一组小方格的数量，调用d3的timeDays方法，获取两个时间之间的天数，例如，计算从1999年的第一天到2000年的第一天,则参数为new Date(1999,0,1)到 new Date(2000,0,1)，timeDays返回天序列
+            .data(function(d) {
+                return d3.time.days(new Date(d, 0, 1), new Date(d + 1, 0, 1));
+            })
+            .enter()
+            .append("rect")
+            .attr("width", cellSize)
+            .attr("height", cellSize)
+            // 返回一年有多少个周，确定一组小方格的横向位置
+            .attr("x", function(d) {
+                return d3.time.weekOfYear(d) * cellSize;
+            })
+            // 返回天，确定一组小方格的纵向位置
+            .attr("y", function(d) {
+                return d.getDay() * cellSize;
+            })
+            .attr("stroke-width", "0.5px")
+            .attr("stroke", "deepSkyblue")
+            .attr("fill", function(d) {
+                var value = Math.random() * 100;
+                return color(value);
+            })
+            .attr("fill-opacity", "0.5")
+            // 定义当前小方格上对应的日期的格式
+            .datum(d3.time.format("%Y-%m-%d"));
+
+        rect.append("title").text(function(d) {
+            return d;
+        });
+
+        // yearsGroup
+        yearsGroup
+            .append("g")
+            .attr("transform", "translate(24, 0)")
+            .selectAll("path")
+            .data(function(d) {
+                return d3.time.months(new Date(d, 0, 1), new Date(d + 1, 0, 1));
+            })
+            .enter()
+            .append("path")
+            .attr("d", pathMonth)
+            .attr("stroke-width", "2px")
+            .attr("stroke", "#333")
+            .attr("fill", "none");
+
+        // 定义月份分割线路径
+        function pathMonth(t0) {
+            var t1 = new Date(t0.getFullYear(), t0.getMonth() + 1, 0),
+                d0 = t0.getDay(),
+                w0 = d3.time.weekOfYear(t0),
+                d1 = t1.getDay(),
+                w1 = d3.time.weekOfYear(t1),
+                path = "";
+
+            path += "M" + (w0 + 1) * cellSize + "," + d0 * cellSize;
+            path += "H" + w0 * cellSize + "V" + 7 * cellSize;
+            path += "H" + w1 * cellSize + "V" + (d1 + 1) * cellSize;
+            path += "H" + (w1 + 1) * cellSize + "V" + 0;
+            path += "H" + (w0 + 1) * cellSize + "Z";
+
+            return path;
+        }
+
+    </script>
+</html>

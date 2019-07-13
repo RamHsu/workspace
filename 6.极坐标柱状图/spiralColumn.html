@@ -1,0 +1,3642 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+        <title>spiralColumn</title>
+        <style>
+            body {
+                font-family: "Lucida Grande", "Lucida Sans Unicode", "Geneva",
+                    "Verdana", sans-serif;
+                margin: 40px;
+            }
+            .chart-container {
+                text-align: center;
+            }
+            .axis path {
+                fill: none;
+                stroke: #999;
+                stroke-dasharray: 2 3;
+            }
+            .axis text {
+                font-size: 13px;
+                stroke: #222;
+            }
+            text.title {
+                font-size: 24px;
+            }
+            circle.tick {
+                fill: #f3f3f3;
+                stroke: #999;
+                stroke-dasharray: 2 3;
+            }
+            path.spiral {
+                fill: none;
+                stroke: #ee8d18;
+                stroke-width: 3px;
+            }
+
+            .tooltip {
+                background: #eee;
+                box-shadow: 0 0 5px #999999;
+                color: #333;
+                font-size: 12px;
+                left: 130px;
+                padding: 10px;
+                position: absolute;
+                text-align: center;
+                top: 95px;
+                z-index: 10;
+                display: block;
+                opacity: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="chart-container"></div>
+    </body>
+    <script src="https://d3js.org/d3.v3.js"></script>
+    <script>
+        /* 
+            spiralColumn （极坐标柱状图）
+            出图条件: 
+                1. 搜索结果包含1个时间列、1个measure列和1个legend列（distinct < 10）
+                2. 数据量大于100小于1000
+         */
+
+        // Other --- start ---
+        var width = 800,
+            height = 600,
+            confData = {
+                legendLength: 30,
+                datas: {
+                    "2012-01": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 0
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 0
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 475,
+                                alarm0: false,
+                                prevData0: 0
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 1
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 1
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 106,
+                                alarm0: false,
+                                prevData0: 475
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 2
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 2
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1943,
+                                alarm0: false,
+                                prevData0: 581
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 3
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 3
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 888,
+                                alarm0: false,
+                                prevData0: 2524
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 4
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 4
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1217,
+                                alarm0: false,
+                                prevData0: 3412
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 5
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 5
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 977,
+                                alarm0: false,
+                                prevData0: 4629
+                            }
+                        ],
+                        total0: 5606
+                    },
+                    "2012-02": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 6
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 6
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 656,
+                                alarm0: false,
+                                prevData0: 5606
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 7
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 7
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 636,
+                                alarm0: false,
+                                prevData0: 6262
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 8
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 8
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 438,
+                                alarm0: false,
+                                prevData0: 6898
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 9
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 9
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 552,
+                                alarm0: false,
+                                prevData0: 7336
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 10
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 10
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 113,
+                                alarm0: false,
+                                prevData0: 7888
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 11
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 11
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1726,
+                                alarm0: false,
+                                prevData0: 8001
+                            }
+                        ],
+                        total0: 4121
+                    },
+                    "2012-03": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 12
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 12
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 715,
+                                alarm0: false,
+                                prevData0: 9727
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 13
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 13
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 149,
+                                alarm0: false,
+                                prevData0: 10442
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 14
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 14
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 243,
+                                alarm0: false,
+                                prevData0: 10591
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 15
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 15
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 543,
+                                alarm0: false,
+                                prevData0: 10834
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 16
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 16
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1737,
+                                alarm0: false,
+                                prevData0: 11377
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 17
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 17
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 871,
+                                alarm0: false,
+                                prevData0: 13114
+                            }
+                        ],
+                        total0: 4258
+                    },
+                    "2012-04": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 18
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 18
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1055,
+                                alarm0: false,
+                                prevData0: 13985
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 19
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 19
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 804,
+                                alarm0: false,
+                                prevData0: 15040
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 20
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 20
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 139,
+                                alarm0: false,
+                                prevData0: 15844
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 21
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 21
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 277,
+                                alarm0: false,
+                                prevData0: 15983
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 22
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 22
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1579,
+                                alarm0: false,
+                                prevData0: 16260
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 23
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 23
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 791,
+                                alarm0: false,
+                                prevData0: 17839
+                            }
+                        ],
+                        total0: 4645
+                    },
+                    "2012-05": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 24
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 24
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 705,
+                                alarm0: false,
+                                prevData0: 18630
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 25
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 25
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1932,
+                                alarm0: false,
+                                prevData0: 19335
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 26
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 26
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 867,
+                                alarm0: false,
+                                prevData0: 21267
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 27
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 27
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 264,
+                                alarm0: false,
+                                prevData0: 22134
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 28
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 28
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 768,
+                                alarm0: false,
+                                prevData0: 22398
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 29
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 29
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 156,
+                                alarm0: false,
+                                prevData0: 23166
+                            }
+                        ],
+                        total0: 4692
+                    },
+                    "2012-06": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 30
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 30
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 393,
+                                alarm0: false,
+                                prevData0: 23322
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 31
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 31
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 88,
+                                alarm0: false,
+                                prevData0: 23715
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 32
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 32
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 1073,
+                                alarm0: false,
+                                prevData0: 23803
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 33
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 33
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 818,
+                                alarm0: false,
+                                prevData0: 24876
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 34
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 34
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1095,
+                                alarm0: false,
+                                prevData0: 25694
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 35
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 35
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 871,
+                                alarm0: false,
+                                prevData0: 26789
+                            }
+                        ],
+                        total0: 4338
+                    },
+                    "2012-07": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 36
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 36
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 743,
+                                alarm0: false,
+                                prevData0: 27660
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 37
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 37
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 130,
+                                alarm0: false,
+                                prevData0: 28403
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 38
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 38
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 828,
+                                alarm0: false,
+                                prevData0: 28533
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 39
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 39
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1334,
+                                alarm0: false,
+                                prevData0: 29361
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 40
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 40
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1644,
+                                alarm0: false,
+                                prevData0: 30695
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 41
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 41
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 463,
+                                alarm0: false,
+                                prevData0: 32339
+                            }
+                        ],
+                        total0: 5142
+                    },
+                    "2012-08": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 42
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 42
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 964,
+                                alarm0: false,
+                                prevData0: 32802
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 43
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 43
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 722,
+                                alarm0: false,
+                                prevData0: 33766
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 44
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 44
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 478,
+                                alarm0: false,
+                                prevData0: 34488
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 45
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 45
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 84,
+                                alarm0: false,
+                                prevData0: 34966
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 46
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 46
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 914,
+                                alarm0: false,
+                                prevData0: 35050
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 47
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 47
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1718,
+                                alarm0: false,
+                                prevData0: 35964
+                            }
+                        ],
+                        total0: 4880
+                    },
+                    "2012-09": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 48
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 48
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 192,
+                                alarm0: false,
+                                prevData0: 37682
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 49
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 49
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 873,
+                                alarm0: false,
+                                prevData0: 37874
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 50
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 50
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 719,
+                                alarm0: false,
+                                prevData0: 38747
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 51
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 51
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1871,
+                                alarm0: false,
+                                prevData0: 39466
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 52
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 52
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 774,
+                                alarm0: false,
+                                prevData0: 41337
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 53
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 53
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 100,
+                                alarm0: false,
+                                prevData0: 42111
+                            }
+                        ],
+                        total0: 4529
+                    },
+                    "2012-10": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 54
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 54
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1916,
+                                alarm0: false,
+                                prevData0: 42211
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 55
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 55
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 307,
+                                alarm0: false,
+                                prevData0: 44127
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 56
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 56
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 430,
+                                alarm0: false,
+                                prevData0: 44434
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 57
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 57
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 729,
+                                alarm0: false,
+                                prevData0: 44864
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 58
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 58
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 666,
+                                alarm0: false,
+                                prevData0: 45593
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 59
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 59
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1099,
+                                alarm0: false,
+                                prevData0: 46259
+                            }
+                        ],
+                        total0: 5147
+                    },
+                    "2012-11": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 60
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 60
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 1318,
+                                alarm0: false,
+                                prevData0: 47358
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 61
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 61
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 2904,
+                                alarm0: false,
+                                prevData0: 48676
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 62
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 62
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 352,
+                                alarm0: false,
+                                prevData0: 51580
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 63
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 63
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 698,
+                                alarm0: false,
+                                prevData0: 51932
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 64
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 64
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 1082,
+                                alarm0: false,
+                                prevData0: 52630
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 65
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 65
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1636,
+                                alarm0: false,
+                                prevData0: 53712
+                            }
+                        ],
+                        total0: 7990
+                    },
+                    "2012-12": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 60
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 60
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 1318,
+                                alarm0: false,
+                                prevData0: 47358
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 61
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 61
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 2904,
+                                alarm0: false,
+                                prevData0: 48676
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 62
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 62
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 352,
+                                alarm0: false,
+                                prevData0: 51580
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 63
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 63
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 698,
+                                alarm0: false,
+                                prevData0: 51932
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 64
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 64
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 1082,
+                                alarm0: false,
+                                prevData0: 52630
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 65
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 65
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1636,
+                                alarm0: false,
+                                prevData0: 53712
+                            }
+                        ],
+                        total0: 7990
+                    },
+                    "2013-01": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 66
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 66
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 751,
+                                alarm0: false,
+                                prevData0: 55348
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 67
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 67
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 374,
+                                alarm0: false,
+                                prevData0: 56099
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 68
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 68
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 899,
+                                alarm0: false,
+                                prevData0: 56473
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 69
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 69
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 290,
+                                alarm0: false,
+                                prevData0: 57372
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 70
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 70
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1101,
+                                alarm0: false,
+                                prevData0: 57662
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 71
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 71
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 602,
+                                alarm0: false,
+                                prevData0: 58763
+                            }
+                        ],
+                        total0: 4017
+                    },
+                    "2013-02": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 72
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 72
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 946,
+                                alarm0: false,
+                                prevData0: 59365
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 73
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 73
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 672,
+                                alarm0: false,
+                                prevData0: 60311
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 74
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 74
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 115,
+                                alarm0: false,
+                                prevData0: 60983
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 75
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 75
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 730,
+                                alarm0: false,
+                                prevData0: 61098
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 76
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 76
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 501,
+                                alarm0: false,
+                                prevData0: 61828
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 77
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 77
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1469,
+                                alarm0: false,
+                                prevData0: 62329
+                            }
+                        ],
+                        total0: 4433
+                    },
+                    "2013-03": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 78
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 78
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 942,
+                                alarm0: false,
+                                prevData0: 63798
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 79
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 79
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 229,
+                                alarm0: false,
+                                prevData0: 64740
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 80
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 80
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 284,
+                                alarm0: false,
+                                prevData0: 64969
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 81
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 81
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 440,
+                                alarm0: false,
+                                prevData0: 65253
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 82
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 82
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 813,
+                                alarm0: false,
+                                prevData0: 65693
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 83
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 83
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1353,
+                                alarm0: false,
+                                prevData0: 66506
+                            }
+                        ],
+                        total0: 4061
+                    },
+                    "2013-04": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 84
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 84
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 194,
+                                alarm0: false,
+                                prevData0: 67859
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 85
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 85
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 186,
+                                alarm0: false,
+                                prevData0: 68053
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 86
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 86
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 830,
+                                alarm0: false,
+                                prevData0: 68239
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 87
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 87
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 382,
+                                alarm0: false,
+                                prevData0: 69069
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 88
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 88
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1526,
+                                alarm0: false,
+                                prevData0: 69451
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 89
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 89
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 482,
+                                alarm0: false,
+                                prevData0: 70977
+                            }
+                        ],
+                        total0: 3600
+                    },
+                    "2013-05": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 90
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 90
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 759,
+                                alarm0: false,
+                                prevData0: 71459
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 91
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 91
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 507,
+                                alarm0: false,
+                                prevData0: 72218
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 92
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 92
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 2358,
+                                alarm0: false,
+                                prevData0: 72725
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 93
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 93
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1014,
+                                alarm0: false,
+                                prevData0: 75083
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 94
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 94
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 962,
+                                alarm0: false,
+                                prevData0: 76097
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 95
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 95
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 178,
+                                alarm0: false,
+                                prevData0: 77059
+                            }
+                        ],
+                        total0: 5778
+                    },
+                    "2013-06": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 96
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 96
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 920,
+                                alarm0: false,
+                                prevData0: 77237
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 97
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 97
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1380,
+                                alarm0: false,
+                                prevData0: 78157
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 98
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 98
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1023,
+                                alarm0: false,
+                                prevData0: 79537
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 99
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 99
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 567,
+                                alarm0: false,
+                                prevData0: 80560
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 100
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 100
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 480,
+                                alarm0: false,
+                                prevData0: 81127
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 101
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 101
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 42,
+                                alarm0: false,
+                                prevData0: 81607
+                            }
+                        ],
+                        total0: 4412
+                    },
+                    "2013-07": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 102
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 102
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 822,
+                                alarm0: false,
+                                prevData0: 81649
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 103
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 103
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1617,
+                                alarm0: false,
+                                prevData0: 82471
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 104
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 104
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 48,
+                                alarm0: false,
+                                prevData0: 84088
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 105
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 105
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 280,
+                                alarm0: false,
+                                prevData0: 84136
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 106
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 106
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 664,
+                                alarm0: false,
+                                prevData0: 84416
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 107
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 107
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 963,
+                                alarm0: false,
+                                prevData0: 85080
+                            }
+                        ],
+                        total0: 4394
+                    },
+                    "2013-08": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 108
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 108
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 629,
+                                alarm0: false,
+                                prevData0: 86043
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 109
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 109
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 263,
+                                alarm0: false,
+                                prevData0: 86672
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 110
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 110
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 858,
+                                alarm0: false,
+                                prevData0: 86935
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 111
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 111
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1782,
+                                alarm0: false,
+                                prevData0: 87793
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 112
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 112
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 837,
+                                alarm0: false,
+                                prevData0: 89575
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 113
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 113
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 108,
+                                alarm0: false,
+                                prevData0: 90412
+                            }
+                        ],
+                        total0: 4477
+                    },
+                    "2013-09": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 114
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 114
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 1183,
+                                alarm0: false,
+                                prevData0: 90520
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 115
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 115
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 2039,
+                                alarm0: false,
+                                prevData0: 91703
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 116
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 116
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 337,
+                                alarm0: false,
+                                prevData0: 93742
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 117
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 117
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 327,
+                                alarm0: false,
+                                prevData0: 94079
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 118
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 118
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 607,
+                                alarm0: false,
+                                prevData0: 94406
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 119
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 119
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 720,
+                                alarm0: false,
+                                prevData0: 95013
+                            }
+                        ],
+                        total0: 5213
+                    },
+                    "2013-10": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 120
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 120
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 204,
+                                alarm0: false,
+                                prevData0: 95733
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 121
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 121
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1305,
+                                alarm0: false,
+                                prevData0: 95937
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 122
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 122
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 300,
+                                alarm0: false,
+                                prevData0: 97242
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 123
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 123
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 836,
+                                alarm0: false,
+                                prevData0: 97542
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 124
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 124
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1529,
+                                alarm0: false,
+                                prevData0: 98378
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 125
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 125
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 784,
+                                alarm0: false,
+                                prevData0: 99907
+                            }
+                        ],
+                        total0: 4958
+                    },
+                    "2013-11": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 126
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 126
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 889,
+                                alarm0: false,
+                                prevData0: 100691
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 127
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 127
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 861,
+                                alarm0: false,
+                                prevData0: 101580
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 128
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 128
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 552,
+                                alarm0: false,
+                                prevData0: 102441
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 129
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 129
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 361,
+                                alarm0: false,
+                                prevData0: 102993
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 130
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 130
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 14,
+                                alarm0: false,
+                                prevData0: 103354
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 131
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 131
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1870,
+                                alarm0: false,
+                                prevData0: 103368
+                            }
+                        ],
+                        total0: 4547
+                    },
+                    "2013-12": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 132
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 132
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 236,
+                                alarm0: false,
+                                prevData0: 105238
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 133
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 133
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 714,
+                                alarm0: false,
+                                prevData0: 105474
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 134
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 134
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 69,
+                                alarm0: false,
+                                prevData0: 106188
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 135
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 135
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1709,
+                                alarm0: false,
+                                prevData0: 106257
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 136
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 136
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1255,
+                                alarm0: false,
+                                prevData0: 107966
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 137
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 137
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 815,
+                                alarm0: false,
+                                prevData0: 109221
+                            }
+                        ],
+                        total0: 4798
+                    },
+                    "2014-01": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 132
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 132
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 236,
+                                alarm0: false,
+                                prevData0: 105238
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 133
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 133
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 714,
+                                alarm0: false,
+                                prevData0: 105474
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 134
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 134
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 69,
+                                alarm0: false,
+                                prevData0: 106188
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 135
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 135
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1709,
+                                alarm0: false,
+                                prevData0: 106257
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 136
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 136
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1255,
+                                alarm0: false,
+                                prevData0: 107966
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 137
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 137
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 815,
+                                alarm0: false,
+                                prevData0: 109221
+                            }
+                        ],
+                        total0: 4798
+                    },
+                    "2014-02": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 132
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 132
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 236,
+                                alarm0: false,
+                                prevData0: 105238
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 133
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 133
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 714,
+                                alarm0: false,
+                                prevData0: 105474
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 134
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 134
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 69,
+                                alarm0: false,
+                                prevData0: 106188
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 135
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 135
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1709,
+                                alarm0: false,
+                                prevData0: 106257
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 136
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 136
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1255,
+                                alarm0: false,
+                                prevData0: 107966
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 137
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 137
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 815,
+                                alarm0: false,
+                                prevData0: 109221
+                            }
+                        ],
+                        total0: 4798
+                    },
+                    "2014-03": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 132
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 132
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 236,
+                                alarm0: false,
+                                prevData0: 105238
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 133
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 133
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 714,
+                                alarm0: false,
+                                prevData0: 105474
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 134
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 134
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 69,
+                                alarm0: false,
+                                prevData0: 106188
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 135
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 135
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1709,
+                                alarm0: false,
+                                prevData0: 106257
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 136
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 136
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1255,
+                                alarm0: false,
+                                prevData0: 107966
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 137
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 137
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 815,
+                                alarm0: false,
+                                prevData0: 109221
+                            }
+                        ],
+                        total0: 4798
+                    },
+                    "2014-04": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 132
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 132
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 236,
+                                alarm0: false,
+                                prevData0: 105238
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 133
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 133
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 714,
+                                alarm0: false,
+                                prevData0: 105474
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 134
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 134
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 69,
+                                alarm0: false,
+                                prevData0: 106188
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 135
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 135
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1709,
+                                alarm0: false,
+                                prevData0: 106257
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 136
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 136
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1255,
+                                alarm0: false,
+                                prevData0: 107966
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 137
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 137
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 815,
+                                alarm0: false,
+                                prevData0: 109221
+                            }
+                        ],
+                        total0: 4798
+                    },
+                    "2014-05": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 132
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 132
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 236,
+                                alarm0: false,
+                                prevData0: 105238
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 133
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 133
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 714,
+                                alarm0: false,
+                                prevData0: 105474
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 134
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 134
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 69,
+                                alarm0: false,
+                                prevData0: 106188
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 135
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 135
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1709,
+                                alarm0: false,
+                                prevData0: 106257
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 136
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 136
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1255,
+                                alarm0: false,
+                                prevData0: 107966
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 137
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 137
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 815,
+                                alarm0: false,
+                                prevData0: 109221
+                            }
+                        ],
+                        total0: 4798
+                    },
+                    "2014-06": {
+                        datas: [
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 132
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 132
+                                    }
+                                ],
+                                x0: "西北",
+                                y0: 236,
+                                alarm0: false,
+                                prevData0: 105238
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 133
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 133
+                                    }
+                                ],
+                                x0: "东北",
+                                y0: 714,
+                                alarm0: false,
+                                prevData0: 105474
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 134
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 134
+                                    }
+                                ],
+                                x0: "西南",
+                                y0: 69,
+                                alarm0: false,
+                                prevData0: 106188
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 135
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 135
+                                    }
+                                ],
+                                x0: "华南",
+                                y0: 1709,
+                                alarm0: false,
+                                prevData0: 106257
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 136
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 136
+                                    }
+                                ],
+                                x0: "华北",
+                                y0: 1255,
+                                alarm0: false,
+                                prevData0: 107966
+                            },
+                            {
+                                columnDetail: [
+                                    {
+                                        columnName: "目的区域",
+                                        columnId: 7,
+                                        columnValue: 137
+                                    },
+                                    {
+                                        columnName: "发货日期",
+                                        columnId: 2,
+                                        columnValue: 137
+                                    }
+                                ],
+                                x0: "华东",
+                                y0: 815,
+                                alarm0: false,
+                                prevData0: 109221
+                            }
+                        ],
+                        total0: 4798
+                    }
+                }
+            };
+
+        var color = function(i) {
+            var colors = ["#37a2da", "#67e0e3", "#ffdb5c", "#ff9f7f", "#e062ae", "#ea6a6a", "#97c979", "#fb8d34", "#feebae", "#fdcf84", "#48b788", "#9f4ef4", "#7894ea"];
+            return colors[i % colors.length];
+        };
+
+        var svg = d3
+            .select(".chart-container")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height);
+        // Other --- end ---
+
+        // 预处理
+        var dataset = [];
+        var num = 0;
+        for (var legend in confData.datas) {
+            var legendDatas = confData.datas[legend];
+            legendDatas.datas.forEach(function(data) {
+                var newData = Object.assign(data);
+                var curDate = new Date("2019/06/01 00:00:00");
+                curDate.setDate(curDate.getDate() + num);
+                newData.legend = legend;
+                newData.group = Math.floor(num / 6);
+                dataset.push(newData);
+                num++;
+            });
+        }
+
+        var spiralsSzie = 12;
+        var legendLength = confData.legendLength;
+        var cylNum = Math.ceil(legendLength / spiralsSzie); // 圈数向上取整
+
+        var contRadius = d3.min([width, height]) / 2 - 40; // 画图区域的半径
+        var sliceRadius = contRadius / (cylNum + 2);
+
+        
+        // 画同心圆参考线
+        var radiusBg = svg
+            .append("g")
+            .attr("class", "radius-bg")
+            .attr("transform", "translate(" + width / 2 + ", " + height / 2 + ")");
+
+        for (var i = 0; i < cylNum + 2; i++) {
+            radiusBg.append("circle")
+                .attr("cx", 0)
+                .attr("cy", 0)
+                .attr("r", sliceRadius * (i + 1))
+                .style("fill", "none")
+                .style("stroke", "grey")
+                .style("stroke-width", "0.5px")
+                .style("stroke-opacity", "0.3");
+        }
+
+        for (var i = 0; i < spiralsSzie + 2; i++) {
+            radiusBg.append('line')
+                .attr("x1", 0)
+                .attr("y1", -sliceRadius)
+                .attr("x2", 0)
+                .attr("y2", -contRadius)
+                .style("stroke", "grey")
+                .style("stroke-width", "0.5px")
+                .style("stroke-opacity", "0.3")
+                .attr("transform", "rotate( " + 360 / spiralsSzie * i + ")");
+        }
+
+
+        // 画径向线
+        var start = 0;
+        var end = 2;
+        var points = d3.range(0, end + 0.001, (end - start) / (dataset.length));
+        var pathRadius = [];
+
+        var radius = d3.scale
+            .linear()
+            .domain([start, end])
+            .range([sliceRadius, contRadius - sliceRadius]);
+
+        var spiral = d3.svg.line
+            .radial()
+            .angle(function(r) {
+                return (legendLength / spiralsSzie) * Math.PI * r;
+            })
+            .radius(function(d, i) {
+                if (i > 0) pathRadius.push(radius(d));
+                return radius(d);
+            });
+            
+        var path = radiusBg
+            .append("path")
+            .datum(points)
+            .attr("id", "spiral")
+            .attr("d", spiral)
+            .style("fill", "none")
+            .style("stroke", "#000");
+
+
+        // 处理画图区域
+        var chartset = svg
+            .append("g")
+            .attr("class", "chartset_1")
+            .attr("transform", "translate(" + width / 2 + ", " + height / 2 + ")");
+
+        // 画柱子
+        var spiralLength = path.node().getTotalLength();
+
+        var curRadius = d3.scale
+            .linear()
+            .domain([0, d3.sum(pathRadius)])
+            .range([0, spiralLength]);
+
+        var yScale = d3.scale.linear()
+            .domain([0, d3.max(dataset, function(d) { return d.y0; })])
+            .range([0, sliceRadius]);
+
+        var totalPathLength = 0;
+
+        var radialRect = chartset.append("g").attr("class", "radial-rect");
+        radialRect.selectAll("rect")
+            .data(dataset)
+            .enter()
+            .append("rect")
+            .attr("x", function(d, i) {
+                var width = curRadius(pathRadius[i]),
+                    posOnLine = path.node().getPointAtLength(totalPathLength + width),
+                    angleOnLine = path.node().getPointAtLength(totalPathLength);
+
+                d.linePer = totalPathLength;
+                d.x = posOnLine.x;
+                d.y = posOnLine.y;
+                d.a = (Math.atan2(angleOnLine.y, angleOnLine.x) * 180) / Math.PI - 90;
+                d.width = width;
+
+                totalPathLength += width;
+
+                return d.x;
+            })
+            .attr("y", function(d) {
+                return d.y;
+            })
+            .attr("width", function(d) {
+                return d.width;
+            })
+            .attr("height", function(d) {
+                return yScale(d.y0);
+            })
+            .style("fill", function(d) {
+                return color(d.group);
+            })
+            .style("stroke", "none")
+            .attr("transform", function(d) {
+                return "rotate(" + d.a + "," + d.x + "," + d.y + ")";
+            });
+
+        // 增加时间标签
+        var radialText = chartset.append("g").attr("class", "radial-text");
+        radialText.selectAll("text")
+            .data(dataset)
+            .enter()
+            .append("text")
+            .attr("class", "text")
+            .attr("dy", 10)
+            .style("text-anchor", "start")
+            .style("font", "10px arial")
+            .append("textPath")
+            .filter(function(d, i) {
+                return i % legendLength === 0;
+            })
+            .text(function(d) {
+                return d.legend;
+            })
+            .attr("xlink:href", "#spiral")
+            .style("fill", "grey")
+            .attr("startOffset", function(d) {
+                return (d.linePer / spiralLength) * 100 + "%";
+            });
+            
+    </script>
+</html>

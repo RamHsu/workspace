@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Calendar</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #eee;
+        }
+
+        .chart-container {
+            position: absolute;
+            top: 100px;
+            right: 100px;
+            bottom: 100px;
+            left: 100px;
+            background-color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chart-container"></div>
+</body>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script>
+    var chartContainer = d3.select(".chart-container");
+    var width = parseFloat(chartContainer.style("width"));
+    var height = parseFloat(chartContainer.style("height"));
+    var cellWidth = (width - 70) / 25;
+    var cellHeight = (height - 20) / 9;
+    var cellSize = Math.min(cellWidth, cellHeight);
+
+    var color = d3.scale
+        .quantize()
+        .domain([0, 100])
+        .range(["red", "orange", "yellow", "green", "cyan", "blue", "purple"]);
+
+    var svg = chartContainer
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height);
+
+    var curDate = new Date(),
+        curYear = curDate.getFullYear(),
+        curMonth = curDate.getMonth(),
+        curDay = curDate.getDay(),
+        curWeek = [],
+        WeekDays = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"],
+        times = ["1AM", "2AM", "3AM", "4AM", "5AM", "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12AM", "1PM", "2PM", "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM", "12PM"];
+
+    for (var i = 0; i < curDay + 1; i++) {
+        curWeek.push(new Date(curYear, curMonth, curDay - i));
+    }
+
+    curWeek.reverse();
+
+    for (var i = curDay + 1; i < 7; i++) {
+        curWeek.push(new Date(curYear, curMonth, i - curDay));
+    }
+
+    var charset = svg
+        .append("g")
+        .attr("class", "charset_1")
+        .attr("transform", function (d, i) {
+            return "translate(60, " + ((height - cellSize * 8) / 2 + 10) + ")";
+        });
+
+    charset
+        .append("g")
+        .selectAll("text")
+        .data(times)
+        .enter()
+        .append("text")
+        .text(function (d, i) {
+            return d;
+        })
+        .style("font-size", "12px")
+        .style("text-anchor", "middle")
+        .attr("dy", "-0.35em")
+        .attr("transform", function (d, i) {
+            return "translate(" + (cellSize * (i + 1.5)) + ", " + cellSize + ")";
+        });
+
+    // 按天分组
+    var daysGroup = charset
+        .selectAll("g")
+        .data(curWeek)
+        .enter()
+        .append("g")
+        .attr("transform", function (d, i) {
+            return "translate(0, " + (cellSize * i) + ")";
+        });
+
+    daysGroup.append("text")
+        .style("text-anchor", "end")
+        .datum(d3.time.format("%Y-%m-%d"))
+        .text(function (d, i) {
+            return d;
+        })
+        .style("font-size", "12px")
+        .attr("transform", function (d, i) {
+            return "translate(" + (cellSize - 10) + ", " + (cellSize / 2 + 5) + ")";
+        });
+
+    daysGroup.append("g")
+        .selectAll("rect")
+        .data(times)
+        .enter()
+        .append("rect")
+        .attr("x", function (d, i) {
+            return cellSize * (i + 1);
+        })
+        .attr("y", 0)
+        .attr("rx", "4px")
+        .attr("ry", "4px")
+        .attr("width", cellSize)
+        .attr("height", cellSize)
+        .attr("stroke-width", "0.5px")
+        .attr("stroke", "#ddd")
+        .attr("fill", function (d, i) {
+            return color(Math.random() * 100);
+        });
+</script>
+
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <link rel="stylesheet" href="../1.Global\global.css" />
+        <style>
+            body {
+                margin: 0;
+                background-color: #eee;
+            }
+
+            .chart-container {
+                position: absolute;
+                top: 100px;
+                right: 100px;
+                bottom: 100px;
+                left: 100px;
+                background-color: #fff;
+            }
+
+            .chart-container p {
+                width: 350px;
+                margin: 50px auto 0;
+                text-align: right;
+            }
+
+            .chart-container ul {
+                width: 350px;
+                margin: 10px auto 0;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .chart-container ul li {
+                width: 50px;
+                height: 50px;
+                border: 0.5px solid #eee;
+                color: #333;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .chart-container ul li.pre-month,
+            .chart-container ul li.next-month {
+                opacity: 0.5;
+            }
+
+            .chart-container ul li.cur-day {
+                background-color: lightskyblue;
+                color: #fff;
+            }
+
+            .chart-container ul li .day {
+              font-size: 16px;
+            }
+
+            .chart-container ul li .lunar-day {
+              font-size: 12px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="chart-container">
+            <ul></ul>
+        </div>
+    </body>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="./calender.js"></script>
+    <script src="./datePlus.js"></script>
+    <script>
+        var curDate = new Date();
+        var curMonth = curDate.getMonth();
+        var cuDay = curDate.getDate();
+        var monthDays = curDate.getMonthDays();
+        var calenderDays = curDate.getCalenderDays(); 
+
+        // console.log(datePlus.getDays("1994-03-26", curDate).length);
+        // console.log(datePlus.getMonths("1994-03-26", curDate).length);
+        // console.log(curDate.getWeekOfMonth());
+        // console.log(curDate.geWeekOftYear());
+
+        var innerHtml = "<li>一</li><li>二</li><li>三</li><li>四</li><li>五</li><li>六</li><li>日</li>";
+        calenderDays.forEach(function(day) {
+            var year = day.getFullYear();
+            var month = day.getMonth();
+            var day = day.getDate();
+            var detail = calendar.solar2lunar(year, month + 1, day);
+            innerHtml += "<li class='" + (month < curMonth ? "pre-month" : (month > curMonth ? "next-month" : ("cur-month" + (day === cuDay ? " cur-day" : ""))))  + "'>";
+            innerHtml += "<span class='day'>" + detail.cDay + "</span>";
+            innerHtml += "<span class='lunar-day'>" + (detail.Term || detail.IDayCn) + "</span>";
+            innerHtml += "</li>";
+        });
+
+        $(".chart-container").prepend("<p>" + curDate.format("yyyy年MM月") + "</p>");
+        $(".chart-container ul").append(innerHtml);
+    </script>
+</html>

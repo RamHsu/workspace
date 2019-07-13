@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: #eee;
+            margin: 0;
+        }
+
+        .chart-container {
+            position: absolute;
+            top: 100px;
+            right: 100px;
+            bottom: 100px;
+            left: 100px;
+            background-color: #fff;
+            cursor: move;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chart-container">
+
+    </div>
+</body>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+    var translateRetions = function (relations) {
+        var relationTables = [], // 所有的表信息
+            relationlinks = [],
+            relationTree = { id: 0, name: "root", children: [] }, // 原数据树结构
+            columnsColor = {}, // 所有的列颜色信息
+            columnIndex = 0, // 用于颜色的计算
+            nodeWidth = 1,
+            nodeHeight = 1,
+            colorSets = ["#37a2da", "#67e0e3", "#ffdb5c", "#ff9f7f", "#e062ae", "#ea6a6a", "#97c979", "#fb8d34", "#feebae", "#fdcf84", "#48b788", "#9f4ef4", "#7894ea"];
+
+        var colors = function (i) {
+            return colorSets[i % colorSets.length];
+        }
+
+        var getRelationTable = function (relations, floor) {
+
+            relations.forEach(function (relation) {
+                var curSrcTable = null, curDstTable = null;
+                for (var i = 0; i < relationTables.length; i++) {
+                    var table = relationTables[i];
+                    if (table.id === relation.factTblId) curSrcTable = table;
+                    if (table.id === relation.dimensionTblId) curDstTable = table;
+                    if (curSrcTable !== null && curDstTable !== null) break;
+                }
+
+                // for curSrcTable
+                if (curSrcTable === null) {
+                    relationTables.push({
+                        id: relation.factTblId,
+                        name: relation.factTblDisplayName,
+                        columns: [],
+                        relations: [],
+                        target: [],
+                        floor: floor
+                    });
+                    curSrcTable = relationTables[relationTables.length - 1];
+                }
+
+                curSrcTable.floor = Math.min(curSrcTable.floor, floor);
+
+                if (curSrcTable.relations.indexOf(relation.id) === -1) {
+                    curSrcTable.relations.push(relation.id);
+                }
+                if (curSrcTable.target.indexOf(relation.dimensionTblId) === -1) {
+                    curSrcTable.target.push(relation.dimensionTblId);
+                }
+
+                // for curDstTable
+                if (curDstTable === null) {
+                    relationTables.push({
+                        id: relation.dimensionTblId,
+                        name: relation.dimensionTblDisplayName,
+                        columns: [],
+                        relations: [],
+                        target: [],
+                        floor: floor + 1
+                    });
+                    curDstTable = relationTables[relationTables.length - 1];
+                }
+                if (curDstTable.relations.indexOf(relation.id) === -1) {
+                    curDstTable.relations.push(relation.id);
+                }
+
+                curDstTable.floor = Math.min(curDstTable.floor, floor + 1);
+
+                // curTable列信息
+                relation.joinConditions.forEach(function (condition) {
+                    var curSrcTableColumns = curSrcTable.columns, curSrcColumn = null,
+                        curDstTableColumns = curDstTable.columns, curDstColumn = null;
+                    for (var i = 0; i < curSrcTableColumns.length; i++) {
+                        var column = curSrcTableColumns[i];
+                        if (column.id === condition.srcColId) curSrcColumn = column;
+                        if (column.id === condition.dstColId) curDstColumn = column;
+                        if (curSrcColumn !== null && curDstColumn !== null) break;
+                    }
+
+                    // for curSrcColumn
+                    if (curSrcColumn === null) {
+                        curSrcTableColumns.push({
+                            id: condition.srcColId,
+                            name: condition.srcColDisplayName,
+                            relations: []
+                        });
+                        curSrcColumn = curSrcTableColumns[curSrcTableColumns.length - 1];
+                    }
+                    if (curSrcColumn.relations.indexOf(relation.id) === -1) {
+                        curSrcColumn.relations.push(relation.id);
+                    }
+
+                    // for curSrcColumn
+                    if (curDstColumn === null) {
+                        curDstTableColumns.push({
+                            id: condition.dstColId,
+                            name: condition.dstColDisplayName,
+                            relations: []
+                        });
+                        curDstColumn = curDstTableColumns[curDstTableColumns.length - 1];
+                    }
+                    if (curDstColumn.relations.indexOf(relation.id) === -1) {
+                        curDstColumn.relations.push(relation.id);
+                    }
+
+                    // column color
+                    if (columnsColor[condition.srcColId]) {
+                        columnsColor[condition.dstColId] = columnsColor[condition.srcColId];
+                        columnIndex++;
+                    } else if (columnsColor[condition.dstColId]) {
+                        columnsColor[condition.srcColId] = columnsColor[condition.dstColId];
+                        columnIndex++;
+                    } else {
+                        columnsColor[condition.srcColId] = colors(columnIndex);
+                        columnsColor[condition.dstColId] = colors(columnIndex);
+                        columnIndex++;
+                    }
+                });
+
+                // 继续解析target表的relations
+                if (relation.children && relation.children.length) {
+                    getRelationTable(relation.children, floor + 1);
+                }
+
+                nodeHeight = Math.max(nodeHeight, floor);
+
+                relationlinks.push({
+                    source: { id: relation.factTblId },
+                    target: { id: relation.dimensionTblId },
+                    id: relation.id,
+                    joinType: relation.joinType,
+                    name: relation.name
+                })
+            });
+        };
+
+        var appendNode = function (tables, curTable, parentTargets) {
+            curTable.enter = true; // 标记为脏值，避免被再次处理
+            var target = curTable.target;
+            curTable.children = [];
+            target.forEach(function (dstId) {
+                if (parentTargets.indexOf(dstId) > -1) return; // 防止子节点抢夺父节点元素
+                var dstTable = tables.find(function (t) {
+                    return t.id === dstId;
+                });
+                if (!dstTable.enter && (curTable.floor === dstTable.floor - 1)) curTable.children.push(appendNode(tables, dstTable, target));
+            });
+            if (curTable.children.length > 1) nodeWidth += curTable.children.length - 1
+            return curTable;
+        };
+
+        var getRelationTree = function (tables, source) {
+            tables.forEach(function (table) {
+                if (table.enter) return;
+                source.push(appendNode(tables, table, []));
+            });
+        };
+
+        getRelationTable(relations, 2);
+
+        getRelationTree(relationTables, relationTree.children);
+
+        return {
+            colors: columnsColor,
+            links: relationlinks,
+            nodes: relationTree,
+            nodeHeight: nodeHeight,
+            nodeWidth: nodeWidth
+        };
+    }
+
+    var relations = [
+        {
+            "children": [
+                {
+                    "children": [],
+                    "description": "",
+                    "dimensionTblDisplayName": "G各个地区的销售数据",
+                    "dimensionTblId": 7,
+                    "dimensionTblName": "csv_6272ec91_e31f_4cac_8b7a_8aede69889e2_9m1564598987",
+                    "factTblDisplayName": "D全国各地经纬度",
+                    "factTblId": 4,
+                    "factTblName": "csv_0e622b88_7eb6_46d7_a0ad_d86b42c55bc7_6p2060556259",
+                    "id": 20,
+                    "joinConditions": [
+                        {
+                            "dstColDisplayName": "成本",
+                            "dstColId": 68,
+                            "dstColName": "col_4",
+                            "id": 20,
+                            "relationId": 20,
+                            "srcColDisplayName": "人口",
+                            "srcColId": 37,
+                            "srcColName": "col_5"
+                        }
+                    ],
+                    "joinFilter": "",
+                    "joinType": "INNER JOIN",
+                    "name": "DG",
+                    "tblId": 4
+                }
+            ],
+            "description": "",
+            "dimensionTblDisplayName": "D全国各地经纬度",
+            "dimensionTblId": 4,
+            "dimensionTblName": "csv_0e622b88_7eb6_46d7_a0ad_d86b42c55bc7_6p2060556259",
+            "factTblDisplayName": "A电商销售数据",
+            "factTblId": 1,
+            "factTblName": "csv_241ac62a_1ed3_4f10_ae8a_ae4c203e6c13_18m211168975",
+            "id": 6,
+            "joinConditions": [
+                {
+                    "dstColDisplayName": "地市",
+                    "dstColId": 33,
+                    "dstColName": "col_1",
+                    "id": 6,
+                    "relationId": 6,
+                    "srcColDisplayName": "目的城市",
+                    "srcColId": 9,
+                    "srcColName": "col_8"
+                }
+            ],
+            "joinFilter": "",
+            "joinType": "INNER JOIN",
+            "name": "AD",
+            "tblId": 1
+        },
+        {
+            "children": [],
+            "description": "",
+            "dimensionTblDisplayName": "F北京二手房",
+            "dimensionTblId": 6,
+            "dimensionTblName": "csv_21f55661_dcd4_45db_a4b2_7e3a4a18732a_13m1466002078",
+            "factTblDisplayName": "A电商销售数据",
+            "factTblId": 1,
+            "factTblName": "csv_241ac62a_1ed3_4f10_ae8a_ae4c203e6c13_18m211168975",
+            "id": 18,
+            "joinConditions": [
+                {
+                    "dstColDisplayName": "楼层",
+                    "dstColId": 56,
+                    "dstColName": "col_5",
+                    "id": 18,
+                    "relationId": 18,
+                    "srcColDisplayName": "产品类别",
+                    "srcColId": 12,
+                    "srcColName": "col_11"
+                }
+            ],
+            "joinFilter": "",
+            "joinType": "INNER JOIN",
+            "name": "AF",
+            "tblId": 1
+        },
+        {
+            "children": [
+                {
+                    "children": [],
+                    "description": "",
+                    "dimensionTblDisplayName": "F北京二手房",
+                    "dimensionTblId": 6,
+                    "dimensionTblName": "csv_21f55661_dcd4_45db_a4b2_7e3a4a18732a_13m1466002078",
+                    "factTblDisplayName": "E销售",
+                    "factTblId": 5,
+                    "factTblName": "csv_04cb6253_2e08_46a8_983f_48b28074050e_13m1466002078",
+                    "id": 24,
+                    "joinConditions": [
+                        {
+                            "dstColDisplayName": "区域名称",
+                            "dstColId": 63,
+                            "dstColName": "col_12",
+                            "id": 24,
+                            "relationId": 24,
+                            "srcColDisplayName": "品类",
+                            "srcColId": 40,
+                            "srcColName": "col_2"
+                        }
+                    ],
+                    "joinFilter": "",
+                    "joinType": "INNER JOIN",
+                    "name": "EF",
+                    "tblId": 5
+                }
+            ],
+            "description": "",
+            "dimensionTblDisplayName": "E销售",
+            "dimensionTblId": 5,
+            "dimensionTblName": "csv_04cb6253_2e08_46a8_983f_48b28074050e_13m1466002078",
+            "factTblDisplayName": "B书院成绩",
+            "factTblId": 2,
+            "factTblName": "csv_3f146a06_a3d7_41c9_9352_8d4dbfbf2e27_10p1084492069",
+            "id": 17,
+            "joinConditions": [
+                {
+                    "dstColDisplayName": "店名",
+                    "dstColId": 41,
+                    "dstColName": "col_3",
+                    "id": 17,
+                    "relationId": 17,
+                    "srcColDisplayName": "称号",
+                    "srcColId": 20,
+                    "srcColName": "col_1"
+                }
+            ],
+            "joinFilter": "",
+            "joinType": "INNER JOIN",
+            "name": "BE",
+            "tblId": 2
+        },
+        {
+            "children": [
+                {
+                    "children": [],
+                    "description": "",
+                    "dimensionTblDisplayName": "G各个地区的销售数据",
+                    "dimensionTblId": 7,
+                    "dimensionTblName": "csv_6272ec91_e31f_4cac_8b7a_8aede69889e2_9m1564598987",
+                    "factTblDisplayName": "H主机状态表",
+                    "factTblId": 8,
+                    "factTblName": "csv_81a76019_8be1_4fee_8043_4235c99914d3_6p2060556259",
+                    "id": 22,
+                    "joinConditions": [
+                        {
+                            "dstColDisplayName": "利润",
+                            "dstColId": 70,
+                            "dstColName": "col_6",
+                            "id": 22,
+                            "relationId": 22,
+                            "srcColDisplayName": "device_id",
+                            "srcColId": 73,
+                            "srcColName": "col_0"
+                        }
+                    ],
+                    "joinFilter": "",
+                    "joinType": "INNER JOIN",
+                    "name": "HG",
+                    "tblId": 8
+                }
+            ],
+            "description": "",
+            "dimensionTblDisplayName": "H主机状态表",
+            "dimensionTblId": 8,
+            "dimensionTblName": "csv_81a76019_8be1_4fee_8043_4235c99914d3_6p2060556259",
+            "factTblDisplayName": "C各城市供销状况",
+            "factTblId": 3,
+            "factTblName": "csv_c0c69963_69f9_405f_ac5a_baebf9a6a9e3_3m1545628878",
+            "id": 21,
+            "joinConditions": [
+                {
+                    "dstColDisplayName": "device_id",
+                    "dstColId": 73,
+                    "dstColName": "col_0",
+                    "id": 21,
+                    "relationId": 21,
+                    "srcColDisplayName": "销量",
+                    "srcColId": 31,
+                    "srcColName": "col_2"
+                }
+            ],
+            "joinFilter": "",
+            "joinType": "INNER JOIN",
+            "name": "CH",
+            "tblId": 3
+        }
+    ];
+
+    var container = $(".chart-container"),
+        svgWidth = container.width(),
+        svgHeight = container.height(),
+        boxWidth = 150, // 表格单元格宽度
+        boxHeight = 40, // 表格单元格高度
+        widthStep = 200, // 每条关联链的宽度
+        heightStep = 400, // 每层关联关系所占高度
+        translateData = translateRetions(relations);
+
+    console.log(translateData);
+
+    var relationNodes = translateData.nodes, // nodes节点
+        relationlinks = translateData.links,
+        colors = translateData.colors, // column颜色
+        relalatonsContainerWidth = Math.max(svgWidth, translateData.nodeWidth * widthStep), // nodes宽度
+        relalatonsContainerHeight = Math.max(svgHeight * 2 / 3, translateData.nodeHeight * heightStep); // nodes高度
+
+    // 缩放及平移
+    var zoom = d3.behavior.zoom()
+        .scaleExtent([0.1, 1])
+        .on('zoom', function () {
+            relationsContainer.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")");
+        });
+
+    // 添加画布，使用缩放及平移
+    var svg = d3.select(container[0]).append("svg")
+        .attr("class", "relationship-chart")
+        .attr("width", "100%")
+        .attr("height", svgHeight)
+        .style("cursor", "move")
+        .style("font-size", "13")
+        .call(zoom);
+
+    // 箭头标记
+    var normalMarker = svg.append("marker")
+        .attr("id", "normal")
+        .attr("markerUnits", "userSpaceOnUse") // 设置为strokeWidth箭头会随着线的粗细发生变化
+        .attr("refX", 10) // 箭头坐标
+        .attr("refY", 5)
+        .attr("markerWidth", 10) // 标识的大小
+        .attr("markerHeight", 10)
+        .attr("orient", "auto") // 绘制方向，可设定为：auto（自动确认方向）和 角度值
+        .attr("stroke-width", 1.5) // 箭头宽度
+        .append("path")
+        .attr("class", "r-marker-n")
+        .attr("d", "M10,5 L0,0 L0,10") // 箭头的路径
+        .attr('fill', '#ddd') // 箭头颜色
+        .attr("fill-opacity", 0)
+        .transition()
+        .delay(300)
+        .duration(500)
+        .attr("fill-opacity", 1);
+
+    // 高亮箭头标记
+    var specialMarker = svg.append("marker")
+        .attr("id", "special")
+        .attr("markerUnits", "userSpaceOnUse")
+        .attr("refX", 10)
+        .attr("refY", 5)
+        .attr("markerWidth", 10)
+        .attr("markerHeight", 10)
+        .attr("orient", "auto")
+        .attr("stroke-width", 1.5)
+        .append("path")
+        .attr("class", "r-marker-s")
+        .attr("d", "M10,5 L0,0 L0,10")
+        .attr('fill', '#f00');
+
+    // 使用树形图布局
+    var tree = d3.layout.tree()
+        .size([relalatonsContainerWidth, relalatonsContainerHeight])
+        .separation(function () { return 0.5; })
+        .value(function (d) {
+            return d.children && d.children.length || 1; // 使用children长度作为分区大小的标准
+        });
+
+    // 用于画节点的数据
+    var nodes = tree.nodes(relationNodes);
+
+    // link line 数据处理 同步nodes的坐标信息
+    nodes.forEach(function (node) {
+        relationlinks.forEach(function (link) {
+            if (link.source.id === node.id) {
+                link.source.x = node.x;
+                link.source.y = node.y;
+                link.source.name = node.name;
+                link.source.depth = node.depth;
+                link.source.columnLength = node.columns.length + 1;
+            }
+            if (link.target.id === node.id) {
+                link.target.x = node.x;
+                link.target.y = node.y;
+                link.source.name = node.name;
+                link.target.depth = node.depth;
+                link.target.columnLength = node.columns.length + 1;
+            }
+        });
+    });
+
+    // link line 起点坐标和终点坐标的计算
+    relationlinks.forEach(function (link) {
+        if (link.source.depth === link.target.depth) link.depthFlag = true;
+
+        link.x1 = link.source.x;
+
+        if (link.source.depth !== link.target.depth) {
+            link.x2 = link.target.x;
+        } else if (link.source.x < link.target.x) {
+            link.x2 = link.target.x - boxWidth / 2;
+        } else {
+            link.x2 = link.target.x + boxWidth / 2;
+        }
+
+        if (link.source.depth < link.target.depth) {
+            link.y1 = link.source.y + boxHeight * link.source.columnLength;
+            link.y2 = link.target.y;
+        } else if (link.source.depth > link.target.depth) {
+            // 此情况存在时则为异常情况
+            link.y1 = link.source.y;
+            link.y2 = link.target.y + boxHeight * link.target.columnLength;
+        } else {
+            link.y1 = link.source.y + boxHeight * link.source.columnLength;
+            link.y2 = link.target.y + boxHeight * link.target.columnLength / 2;
+        }
+
+    });
+
+    var relationsContainer = svg.append("g")
+        .attr("class", "relations-container");
+
+    // 画关联线
+    var links = relationsContainer.selectAll("g.r-link")
+        .data(relationlinks)
+        .enter()
+        .append("g")
+        .attr("class", "r-link")
+        .style("cursor", "pointer")
+        .attr("relation-id", function (d) {
+            return d.id;
+        })
+        .attr("source-tid", function (d) {
+            return d.source.id;
+        })
+        .attr("target-tid", function (d) {
+            return d.target.id;
+        })
+        .attr("transform", "translate(" + ((svgWidth - relalatonsContainerWidth) / 2) + ", " + (50 - heightStep) + ")")
+        .on("mouseover", function (d) {
+            showCurrentRelations([d.id]);
+        })
+        .on("mouseout", function (d) {
+            hideCurrentRelations();
+        });
+
+    links.append("path")
+        .attr("stroke", "#ddd")
+        .attr("stroke-width", "1px")
+        .attr("fill", "none")
+        .attr("d", getLinkPath)
+        .attr("marker-end", "url(#normal)")
+        .attr("stroke-opacity", 0)
+        .transition()
+        .delay(300)
+        .duration(500)
+        .attr("stroke-opacity", 1);
+
+    links
+        .each(function (d) {
+            d.posX = d.x1 - (d.x1 - d.x2) / 2;
+            d.posY = d.y1 - (d.y1 - d.y2) / 2 + (d.depthFlag ? 90 : 0);
+        })
+        .append("text")
+        .attr("x", function (d, i) {
+            return d.posX;
+        })
+        .attr("y", function (d, i) {
+            return d.posY;
+        })
+        .attr("dy", "0.35em")
+        .attr("transform", function (d) {
+            var x = d.x1 - d.x2,
+                y = d.y1 - d.y2,
+                deg = 0;
+
+            if (x === 0) deg = -90;
+            else if (y !== 0) deg = getTanDeg(y / x);
+
+            return "rotate(" + deg + "," + d.posX + "," + (d.posY) + ")" + "translate(0," + (d.depthFlag ? 3 : -7) + ")";
+        })
+        .attr("text-anchor", "middle")
+        .attr("fill", "#ddd")
+        .text(function (d, i) {
+            return d.name;
+        })
+        .style("font-size", "12")
+        .attr("fill-opacity", 0)
+        .transition()
+        .delay(300)
+        .duration(500)
+        .attr("fill-opacity", 1);
+
+    var node = relationsContainer.selectAll("g.r-table")
+        .data(nodes);
+
+    // 绘制关联表
+    var tablesEnter = node.enter()
+        .append("g")
+        .attr("class", "r-tables")
+        .style("cursor", "pointer")
+        .filter(function (d) {
+            return d.depth > 0;
+        })
+        .attr("source-tid", function (d) {
+            return d.parent && d.parent.id || "";
+        })
+        .attr("target-tid", function (d) {
+            return d.id;
+        });
+
+    tablesEnter
+        .append("g")
+        .attr("class", "r-bg")
+        .append("rect")
+        .attr("fill", "#fff")
+        .attr("stroke", "none")
+        .attr("stroke-width", "1px")
+        .attr("y", 0)
+        .attr("x", function (d) {
+            return -(boxWidth / 2);
+        })
+        .attr("width", function (d) {
+            return boxWidth;
+        })
+        .attr("height", function (d) {
+            return boxHeight * (d.columns.length + 1);
+        });
+
+    // 绘制关联表名
+    var tableTitle = tablesEnter
+        .append("g")
+        .attr("class", "r-title")
+        .attr("relation-id", function (d) {
+            return d.relations && d.relations.join(",");
+        })
+        .on("mouseover", function (d) {
+            $(this).find("text").css("fill", "#008ff8");
+            showCurrentRelations(d.relations);
+        })
+        .on("mouseout", function (d) {
+            $(this).find("text").css("fill", "#333");
+            hideCurrentRelations();
+        });
+
+    tableTitle
+        .append("rect")
+        .attr("fill", "#eee")
+        .attr("stroke", "none")
+        .attr("stroke-width", "1px")
+        .attr("y", 0)
+        .attr("x", function (d) {
+            return -(boxWidth / 2);
+        })
+        .attr("width", function (d) {
+            return boxWidth;
+        })
+        .attr("height", function (d) {
+            return boxHeight;
+        });
+
+    tableTitle.append("text")
+        .attr("dx", "10px")
+        .attr("dy", "10px")
+        .attr("transform", function () {
+            return "translate(" + (-boxWidth / 2) + ", 15)";
+        })
+        .attr("text-anchor", "strat")
+        .text(function (d, i) {
+            return d.name;
+        })
+        .style("font-size", "14px")
+        .style("font-weight", "700");
+
+    // 绘制关联列
+    var columnsEnter = tablesEnter.selectAll("g.r-columns")
+        .data(function (d) {
+            return d.columns || [];
+        })
+        .enter()
+        .append("g")
+        .attr("class", "r-columns")
+        .attr("column-id", function (d) {
+            return d.id;
+        })
+        .attr("relation-id", function (d) {
+            return d.relations && d.relations.join(",");
+        })
+        .attr("transform", function (d, i) {
+            return "translate(0 , " + boxHeight * (i + 1) + ")";
+        })
+        .style("fill", "#fff")
+        .on("mouseover", function (d) {
+            showCurrentRelations(d.relations);
+        })
+        .on("mouseout", function (d) {
+            hideCurrentRelations();
+        });
+
+    columnsEnter.append("rect")
+        .attr("fill", function (d) {
+            return colors[d.id];
+        })
+        .attr("stroke", "none")
+        .attr("y", 0)
+        .attr("x", function (d) {
+            return -(boxWidth / 2);
+        })
+        .attr("width", function (d) {
+            return boxWidth;
+        })
+        .attr("height", function (d) {
+            return boxHeight;
+        })
+        .style("fill-opacity", 0.1);
+
+    columnsEnter.append("text")
+        .attr("dx", "10px")
+        .attr("dy", "10px")
+        .attr("transform", function () {
+            return "translate(" + (-boxWidth / 2) + ", 15)";
+        })
+        .attr("text-anchor", "strat")
+        .style("fill", "#333")
+        .text(function (d, i) {
+            return d.name;
+        });
+
+    node
+        .attr("transform", function (d) {
+            return "translate(" + (svgWidth / 2) + "," + (svgHeight / 2 - boxHeight * 2) + ")";
+        })
+        .transition()
+        .duration(500)
+        .attr("transform", function (d) {
+            return "translate(" + ((svgWidth - relalatonsContainerWidth) / 2 + d.x) + "," + (50 - heightStep + d.y) + ")";
+        });
+
+    // 计算link path
+    function getLinkPath(d) {
+        var sourceX = d.x1,
+            sourceY = d.y1,
+            targetX = d.x2,
+            targetY = d.y2,
+            data = "";
+
+        data += "M" + sourceX + "," + sourceY + " ";
+
+        if (d.depthFlag) {
+            data += "Q" + (sourceX + (targetX - sourceX) / 2) + "," + (sourceY + (targetY - sourceY) / 2 + 150) + " "
+        }
+
+        data += targetX + "," + targetY;
+
+        return data;
+    }
+
+    // tan值求角度
+    function getTanDeg(tan) {
+        return Math.round(Math.atan(tan) / (Math.PI / 180));
+    }
+
+    // 鼠标移入事件
+    function showCurrentRelations(rids) {
+        container.find("g.r-columns").each(function () {
+            var g = $(this), gRidsStr = g.attr("relation-id") || "",
+                gRids = gRidsStr.split(",").map(function (e) { return parseFloat(e) }),
+                rFlag = false;
+            for (var i = 0; i < rids.length; i++) {
+                for (var j = 0; j < gRids.length; j++) {
+                    if (rids[i] === gRids[j]) {
+                        g.find("rect").css("fill-opacity", 1);
+                        g.find("text").css("fill", "#fff");
+                        return;
+                    }
+                }
+            }
+        });
+        container.find("g.r-link").each(function () {
+            var g = $(this),
+                gRidsStr = g.attr("relation-id") || "",
+                rid = parseFloat(gRidsStr);
+
+            if (rids.indexOf(rid) > -1) {
+                g.find("path").css("stroke", "#f00").attr("marker-end", "url(#special)");
+                g.find("text").css("fill", "#008ff8");
+            } else {
+                g.find("path").css("stroke", "none");
+                g.find("text").css("fill", "none");
+                container.find("path.r-marker-n").css("fill", "none");
+            }
+        });
+    }
+
+    // 鼠标移除事件
+    function hideCurrentRelations() {
+        var columns = container.find("g.r-columns"),
+            links = container.find("g.r-link");
+
+        columns.find("rect").css("fill-opacity", 0.1);
+        columns.find("text").css("fill", "#333");
+        links.find("path").css("stroke", "#ddd").attr("marker-end", "url(#normal)");
+        links.find("text").css("fill", "#ddd");
+        container.find("path.r-marker-n").css("fill", "#ddd");
+    }
+</script>
+
+</html>

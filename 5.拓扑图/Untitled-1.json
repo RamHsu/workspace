@@ -1,0 +1,814 @@
+{
+    "allow_configs": {
+        "pivot": {
+            "measures": [
+                2
+            ],
+            "attributes": [
+                0,
+                1
+            ],
+            "type": "pivot",
+            "enabled": true
+        }
+    },
+    "configs": {
+        "page": {
+            "page_no": 1,
+            "type": "page",
+            "enabled": true,
+            "page_size": 1000
+        }
+    },
+    "headers": [
+        {
+            "geo_type": "",
+            "annotation_token": {},
+            "hidden": false,
+            "col_id": "186305348042845990865893066621099426117",
+            "distincts": [
+                "华北",
+                "华东",
+                "西南",
+                "华南",
+                "东北",
+                "西北"
+            ],
+            "annotations": [
+                {
+                    "id": 1,
+                    "content": {
+                        "end": 4,
+                        "tokens": [
+                            {
+                                "detailType": "string",
+                                "columnId": 7,
+                                "description": "目的区域 in 电商销售数据",
+                                "end": 4,
+                                "tokens": [
+                                    "目的区域"
+                                ],
+                                "type": "attribute",
+                                "begin": 0,
+                                "value": "目的区域",
+                                "tableName": "电商销售数据",
+                                "columnName": "目的区域"
+                            }
+                        ],
+                        "id": 1,
+                        "category": "attributeColumn",
+                        "type": "phrase",
+                        "begin": 0
+                    }
+                }
+            ],
+            "drill_down_cols": [
+                {
+                    "geoType": "",
+                    "columnId": 8,
+                    "fromColumnId": 7,
+                    "dataType": "string",
+                    "tableId": 1,
+                    "tableName": "电商销售数据",
+                    "columnName": "目的省份"
+                },
+                {
+                    "geoType": "",
+                    "columnId": 9,
+                    "fromColumnId": 7,
+                    "dataType": "string",
+                    "tableId": 1,
+                    "tableName": "电商销售数据",
+                    "columnName": "目的城市"
+                }
+            ],
+            "col_name": "目的区域",
+            "operator": "",
+            "head_type": "column",
+            "dep_cols": [
+                7
+            ],
+            "drill_up_cols": [],
+            "hash_key": "ad707ca4bd6101fc29e9a06da11f56c4",
+            "data_type": "string",
+            "categories": [],
+            "idx": 0,
+            "col_type": "ATTRIBUTE",
+            "is_empty": false,
+            "statistics": {
+                "count": 36,
+                "unique count": 6
+            },
+            "col_uuid": 7
+        },
+        {
+            "geo_type": "",
+            "annotation_token": {},
+            "hidden": false,
+            "col_id": "315745797380731141927696931350199152722",
+            "distincts": [
+                "圆通",
+                "EMS",
+                "申通",
+                "中通",
+                "顺丰",
+                "韵达"
+            ],
+            "annotations": [
+                {
+                    "id": 2,
+                    "content": {
+                        "end": 8,
+                        "tokens": [
+                            {
+                                "detailType": "string",
+                                "columnId": 10,
+                                "description": "快递公司 in 电商销售数据",
+                                "end": 8,
+                                "tokens": [
+                                    "快递公司"
+                                ],
+                                "type": "attribute",
+                                "begin": 4,
+                                "value": "快递公司",
+                                "tableName": "电商销售数据",
+                                "columnName": "快递公司"
+                            }
+                        ],
+                        "id": 2,
+                        "category": "attributeColumn",
+                        "type": "phrase",
+                        "begin": 4
+                    }
+                }
+            ],
+            "drill_down_cols": [],
+            "col_name": "快递公司",
+            "operator": "",
+            "head_type": "column",
+            "dep_cols": [
+                10
+            ],
+            "drill_up_cols": [],
+            "hash_key": "33a13b06c5d04deb80476f776a12772d",
+            "data_type": "string",
+            "categories": [],
+            "idx": 1,
+            "col_type": "ATTRIBUTE",
+            "is_empty": false,
+            "statistics": {
+                "count": 36,
+                "unique count": 6
+            },
+            "col_uuid": 10
+        },
+        {
+            "geo_type": "",
+            "annotation_token": {},
+            "hidden": false,
+            "col_id": "223326566355395413407089978590145607001",
+            "distincts": [],
+            "annotations": [
+                {
+                    "id": 3,
+                    "content": {
+                        "end": 12,
+                        "tokens": [
+                            {
+                                "detailType": "double",
+                                "columnId": 18,
+                                "description": "销售金额 in 电商销售数据",
+                                "end": 12,
+                                "tokens": [
+                                    "销售金额"
+                                ],
+                                "type": "measure",
+                                "begin": 8,
+                                "value": "销售金额",
+                                "tableName": "电商销售数据",
+                                "columnName": "销售金额"
+                            }
+                        ],
+                        "id": 3,
+                        "category": "measureColumn",
+                        "type": "phrase",
+                        "begin": 8
+                    }
+                }
+            ],
+            "drill_down_cols": [],
+            "col_name": "销售金额",
+            "operator": "sum",
+            "head_type": "column",
+            "dep_cols": [
+                18
+            ],
+            "drill_up_cols": [],
+            "hash_key": "ad93445be61aa577db818799d58c031f",
+            "data_type": "double",
+            "categories": [],
+            "idx": 2,
+            "col_type": "MEASURE",
+            "is_empty": false,
+            "statistics": {
+                "average": 51029.42202777778,
+                "min": 1993.8359999999998,
+                "max": 277746.4650000001,
+                "variance": 3759289033.0786195,
+                "count": 36,
+                "sum": 1837059.193,
+                "unique count": 36,
+                "standard deviation": 61313.04129692654
+            },
+            "col_uuid": 18
+        }
+    ],
+    "result_type": "normal",
+    "charts": [
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [
+                1,
+                0
+            ],
+            "type": "column"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [
+                1,
+                0
+            ],
+            "type": "line"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [],
+            "type": "pie"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [],
+            "type": "circle"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [
+                1,
+                0
+            ],
+            "type": "scatter"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [
+                1,
+                0
+            ],
+            "type": "bar"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [
+                1,
+                0
+            ],
+            "type": "area"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [
+                1,
+                0
+            ],
+            "type": "pareto"
+        },
+        {
+            "columns": [
+                0,
+                1
+            ],
+            "values": [
+                2
+            ],
+            "type": "pivottable",
+            "rows": [
+                0,
+                1
+            ]
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [
+                1,
+                0
+            ],
+            "type": "stackedcolumn"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [
+                1,
+                0
+            ],
+            "type": "stackedarea"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "type": "funnel"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [
+                1,
+                0
+            ],
+            "type": "radar"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [
+                1,
+                0
+            ],
+            "type": "recttree"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "type": "sunburst"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "type": "pack"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "type": "sankey"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "type": "parallel"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "legend": [
+                1,
+                0
+            ],
+            "type": "stackedbarcolumn"
+        },
+        {
+            "y_axis": [
+                2
+            ],
+            "x_axis": [
+                0,
+                1
+            ],
+            "type": "boxplot"
+        }
+    ],
+    "question": "目的区域快递公司销售金额",
+    "columns": [
+        [
+            "东北",
+            "顺丰",
+            126075.64899999998
+        ],
+        [
+            "东北",
+            "韵达",
+            19480.586000000003
+        ],
+        [
+            "东北",
+            "中通",
+            27168.329999999998
+        ],
+        [
+            "东北",
+            "EMS",
+            6043.791000000001
+        ],
+        [
+            "东北",
+            "申通",
+            20003.845000000005
+        ],
+        [
+            "东北",
+            "圆通",
+            66533.82200000003
+        ],
+        [
+            "华东",
+            "顺丰",
+            137318.35599999994
+        ],
+        [
+            "华东",
+            "中通",
+            23027.820000000003
+        ],
+        [
+            "华东",
+            "圆通",
+            89187.05699999997
+        ],
+        [
+            "华东",
+            "EMS",
+            3576.007
+        ],
+        [
+            "华东",
+            "申通",
+            45938.17
+        ],
+        [
+            "华东",
+            "韵达",
+            23400.146999999997
+        ],
+        [
+            "华北",
+            "中通",
+            26373.728000000014
+        ],
+        [
+            "华北",
+            "顺丰",
+            154789.895
+        ],
+        [
+            "华北",
+            "EMS",
+            8013.096
+        ],
+        [
+            "华北",
+            "申通",
+            49546.334
+        ],
+        [
+            "华北",
+            "韵达",
+            27405.493000000006
+        ],
+        [
+            "华北",
+            "圆通",
+            96978.14600000004
+        ],
+        [
+            "华南",
+            "申通",
+            72129.499
+        ],
+        [
+            "华南",
+            "中通",
+            42066.45400000003
+        ],
+        [
+            "华南",
+            "EMS",
+            6861.151
+        ],
+        [
+            "华南",
+            "韵达",
+            64062.07999999998
+        ],
+        [
+            "华南",
+            "顺丰",
+            277746.4650000001
+        ],
+        [
+            "华南",
+            "圆通",
+            199422.5099999999
+        ],
+        [
+            "西北",
+            "韵达",
+            12769.460999999998
+        ],
+        [
+            "西北",
+            "顺丰",
+            63843.532
+        ],
+        [
+            "西北",
+            "申通",
+            25357.119000000006
+        ],
+        [
+            "西北",
+            "EMS",
+            5863.566000000002
+        ],
+        [
+            "西北",
+            "中通",
+            9611.378000000002
+        ],
+        [
+            "西北",
+            "圆通",
+            41992.95099999999
+        ],
+        [
+            "西南",
+            "圆通",
+            15554.547000000002
+        ],
+        [
+            "西南",
+            "顺丰",
+            30966.601
+        ],
+        [
+            "西南",
+            "EMS",
+            1993.8359999999998
+        ],
+        [
+            "西南",
+            "韵达",
+            4020.813
+        ],
+        [
+            "西南",
+            "中通",
+            5289.1939999999995
+        ],
+        [
+            "西南",
+            "申通",
+            6647.763999999999
+        ]
+    ],
+    "alarms": [],
+    "source_token": "d6f55e8d-92fe-4347-b5cf-1dee5f864471",
+    "filters": [],
+    "source": "searchUser",
+    "total_pages": 1,
+    "page_no": 1,
+    "title": "目的区域快递公司销售金额",
+    "analysis": {},
+    "real_cost": 1.24015,
+    "sql": {
+        "where_clause": "",
+        "order_by_clause": " order by col_186305348042845990865893066621099426117",
+        "select_clause": "`csv_b478738d_742c_4cbf_8384_ff1b969549aa`.`col_6` as col_186305348042845990865893066621099426117,`csv_b478738d_742c_4cbf_8384_ff1b969549aa`.`col_9` as col_315745797380731141927696931350199152722,sum(`csv_b478738d_742c_4cbf_8384_ff1b969549aa`.`col_17`) as col_223326566355395413407089978590145607001",
+        "from_clause": "`csv_b478738d_742c_4cbf_8384_ff1b969549aa`",
+        "group_by_clause": " group by col_186305348042845990865893066621099426117,col_315745797380731141927696931350199152722",
+        "having_clause": "",
+        "limit_clause": ""
+    },
+    "duration": "0.74681",
+    "default_chart": {
+        "y_axis": [
+            2
+        ],
+        "x_axis": [
+            0,
+            1
+        ],
+        "legend": [],
+        "type": "circle"
+    },
+    "hash_key": "919fa71df23765fbf0d0cd469cfbed4871275db41693d8e0181d1e4c73143bf8",
+    "head_lines": [
+        {
+            "hid": "186305348042845990865893066621099426117",
+            "values": [
+                6
+            ],
+            "data_type": "string",
+            "annotations": [
+                {
+                    "id": 1,
+                    "content": {
+                        "end": 4,
+                        "tokens": [
+                            {
+                                "detailType": "string",
+                                "columnId": 7,
+                                "description": "目的区域 in 电商销售数据",
+                                "end": 4,
+                                "tokens": [
+                                    "目的区域"
+                                ],
+                                "type": "attribute",
+                                "begin": 0,
+                                "value": "目的区域",
+                                "tableName": "电商销售数据",
+                                "columnName": "目的区域"
+                            }
+                        ],
+                        "id": 1,
+                        "category": "attributeColumn",
+                        "type": "phrase",
+                        "begin": 0
+                    }
+                }
+            ],
+            "col_name": "目的区域",
+            "idx": 0,
+            "col_type": "ATTRIBUTE",
+            "operator": "unique count"
+        },
+        {
+            "hid": "315745797380731141927696931350199152722",
+            "values": [
+                6
+            ],
+            "data_type": "string",
+            "annotations": [
+                {
+                    "id": 2,
+                    "content": {
+                        "end": 8,
+                        "tokens": [
+                            {
+                                "detailType": "string",
+                                "columnId": 10,
+                                "description": "快递公司 in 电商销售数据",
+                                "end": 8,
+                                "tokens": [
+                                    "快递公司"
+                                ],
+                                "type": "attribute",
+                                "begin": 4,
+                                "value": "快递公司",
+                                "tableName": "电商销售数据",
+                                "columnName": "快递公司"
+                            }
+                        ],
+                        "id": 2,
+                        "category": "attributeColumn",
+                        "type": "phrase",
+                        "begin": 4
+                    }
+                }
+            ],
+            "col_name": "快递公司",
+            "idx": 1,
+            "col_type": "ATTRIBUTE",
+            "operator": "unique count"
+        },
+        {
+            "hid": "223326566355395413407089978590145607001",
+            "values": [
+                1837059.193
+            ],
+            "data_type": "double",
+            "annotations": [
+                {
+                    "id": 3,
+                    "content": {
+                        "end": 12,
+                        "tokens": [
+                            {
+                                "detailType": "double",
+                                "columnId": 18,
+                                "description": "销售金额 in 电商销售数据",
+                                "end": 12,
+                                "tokens": [
+                                    "销售金额"
+                                ],
+                                "type": "measure",
+                                "begin": 8,
+                                "value": "销售金额",
+                                "tableName": "电商销售数据",
+                                "columnName": "销售金额"
+                            }
+                        ],
+                        "id": 3,
+                        "category": "measureColumn",
+                        "type": "phrase",
+                        "begin": 8
+                    }
+                }
+            ],
+            "col_name": "销售金额",
+            "idx": 2,
+            "col_type": "MEASURE",
+            "operator": "sum"
+        }
+    ],
+    "datasource": "default",
+    "page_size": 1000
+}

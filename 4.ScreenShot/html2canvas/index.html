@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body {
+            height: 100%;
+            background-color: #eee;
+            margin: 0;
+        }
+
+        .container {
+            position: relative;
+        }
+
+        .flex-box {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: baseline;
+            overflow: auto;
+        }
+
+        .flex-item {
+            text-transform: uppercase;
+        }
+
+        .flex-item:nth-child(odd) {
+            font-size: 30px;
+        }
+
+        .flex-item:nth-child(even) {
+            font-size: 24px;
+        }
+
+        .flex-item:nth-child(3n+1) {
+            color: skyblue;
+        }
+
+        .flex-item:nth-child(3n+2) {
+            color: pink;
+        }
+
+        .flex-item:nth-child(3n) {
+            color: lightgray;
+        }
+
+        a,
+        a:hover,
+        a:visited {
+            padding: 5px 10px;
+            border: 1px solid #999;
+            text-decoration: none;
+            font-size: 13px;
+            color: #333;
+            line-height: 20px;
+            cursor: pointer;
+        }
+
+        .get-screen {
+            position: fixed;
+            top: 5px;
+            right: 5px;
+            background-color: #fff;
+        }
+
+        .chart-container {
+            background-color: lightgoldenrodyellow;
+        }
+
+        svg {
+            stroke: rgb(102, 102, 102);
+            overflow: visible;
+            box-sizing: border-box;
+        }
+
+        svg text {
+            font-size: 12px;
+            fill: purple;
+            stroke: purple;
+            stroke-width: 0;
+        }
+
+        svg tspan {
+            font-size: 60px;
+            fill: purple;
+            stroke: purple;
+            stroke-width: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="chart-container">
+            <div class="flex-box">
+                <span class="flex-item">h</span>
+                <span class="flex-item">e</span>
+                <span class="flex-item">l</span>
+                <span class="flex-item">l</span>
+                <span class="flex-item">o</span>
+                <span class="flex-item">w</span>
+                <span class="flex-item">&ensp;</span>
+                <span class="flex-item">w</span>
+                <span class="flex-item">o</span>
+                <span class="flex-item">r</span>
+                <span class="flex-item">l</span>
+                <span class="flex-item">d</span>
+            </div>
+            <svg class="con-svg" width="480" height="268">
+                <g class="con-g bar-chart-g" transform="translate(2.5,30)">
+                    <defs>
+                        <linearGradient id="multim58v3kqpw0i" x1="1" y1="0" x2="0.9999999999999999" y2="1.0000000000000002">
+                            <stop offset="0%" style="stop-color:#E38A99;stop-opacity:1"></stop>
+                            <stop offset="100%" style="stop-color:#9E5DB7;stop-opacity:1"></stop>
+                        </linearGradient>
+                    </defs>
+                    <g class="axis axis1" transform="translate(45, 208.90625)" id="xaxis">
+                        <g class="tick" transform="translate(31.272040302267005,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".71em" y="10" x="0" transform="" style="text-anchor:middle;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">2月</text>
+                            <line class="net-line" y2="-208.90625" x2="0" style="stroke-dasharray:2, 2;stroke:gray;"></line>
+                        </g>
+                        <g class="tick" transform="translate(64.0176322418136,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".71em" y="10" x="0" transform="" style="text-anchor:middle;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">3月</text>
+                            <line class="net-line" y2="-208.90625" x2="0" style="stroke-dasharray:2, 2;stroke:gray;"></line>
+                        </g>
+                        <g class="tick" transform="translate(96.7632241813602,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".71em" y="10" x="0" transform="" style="text-anchor:middle;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">4月</text>
+                            <line class="net-line" y2="-208.90625" x2="0" style="stroke-dasharray:2, 2;stroke:gray;"></line>
+                        </g>
+                        <g class="tick" transform="translate(129.5088161209068,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".71em" y="10" x="0" transform="" style="text-anchor:middle;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">5月</text>
+                            <line class="net-line" y2="-208.90625" x2="0" style="stroke-dasharray:2, 2;stroke:gray;"></line>
+                        </g>
+                        <g class="tick" transform="translate(162.2544080604534,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".71em" y="10" x="0" transform="" style="text-anchor:middle;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">6月</text>
+                            <line class="net-line" y2="-208.90625" x2="0" style="stroke-dasharray:2, 2;stroke:gray;"></line>
+                        </g>
+                        <g class="tick" transform="translate(195,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".71em" y="10" x="0" transform="" style="text-anchor:middle;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">7月</text>
+                            <line class="net-line" y2="-208.90625" x2="0" style="stroke-dasharray:2, 2;stroke:gray;"></line>
+                        </g>
+                        <g class="tick" transform="translate(227.7455919395466,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".71em" y="10" x="0" transform="" style="text-anchor:middle;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">8月</text>
+                            <line class="net-line" y2="-208.90625" x2="0" style="stroke-dasharray:2, 2;stroke:gray;"></line>
+                        </g>
+                        <g class="tick" transform="translate(260.49118387909317,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".71em" y="10" x="0" transform="" style="text-anchor:middle;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">9月</text>
+                            <line class="net-line" y2="-208.90625" x2="0" style="stroke-dasharray:2, 2;stroke:gray;"></line>
+                        </g>
+                        <g class="tick" transform="translate(293.2367758186398,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".71em" y="10" x="0" transform="" style="text-anchor:middle;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">10月</text>
+                            <line class="net-line" y2="-208.90625" x2="0" style="stroke-dasharray:2, 2;stroke:gray;"></line>
+                        </g>
+                        <g class="tick" transform="translate(325.9823677581864,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".71em" y="10" x="0" transform="" style="text-anchor:middle;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">11月</text>
+                            <line class="net-line" y2="-208.90625" x2="0" style="stroke-dasharray:2, 2;stroke:gray;"></line>
+                        </g>
+                        <g class="tick" transform="translate(358.727959697733,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".71em" y="10" x="0" transform="" style="text-anchor:middle;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">12月</text>
+                            <line class="net-line" y2="-208.90625" x2="0" style="stroke-dasharray:2, 2;stroke:gray;"></line>
+                        </g>
+                        <path class="domain" d="M0,0V0H390V0" style="fill:none;stroke:pink;"></path>
+                    </g>
+                    <g class="axis axis2" id="yaxis" transform="translate(45,0)" style="display:none;">
+                        <g class="tick" transform="translate(0,208.90625)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".32em" x="-10" y="0" transform="" style="text-anchor:end;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">0</text>
+                        </g>
+                        <g class="tick" transform="translate(0,167.125)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".32em" x="-10" y="0" transform="" style="text-anchor:end;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">171</text>
+                            <line class="net-line" x2="390" y2="0" style="stroke-dasharray:2, 2;stroke:rgb(67, 67, 67);"></line>
+                        </g>
+                        <g class="tick" transform="translate(0,125.34375000000001)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".32em" x="-10" y="0" transform="" style="text-anchor:end;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">341</text>
+                            <line class="net-line" x2="390" y2="0" style="stroke-dasharray:2, 2;stroke:rgb(67, 67, 67);"></line>
+                        </g>
+                        <g class="tick" transform="translate(0,83.56250000000003)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".32em" x="-10" y="0" transform="" style="text-anchor:end;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">512</text>
+                            <line class="net-line" x2="390" y2="0" style="stroke-dasharray:2, 2;stroke:rgb(67, 67, 67);"></line>
+                        </g>
+                        <g class="tick" transform="translate(0,41.781250000000014)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".32em" x="-10" y="0" transform="" style="text-anchor:end;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">683</text>
+                            <line class="net-line" x2="390" y2="0" style="stroke-dasharray:2, 2;stroke:rgb(67, 67, 67);"></line>
+                        </g>
+                        <g class="tick" transform="translate(0,0)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".32em" x="-10" y="0" transform="" style="text-anchor:end;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">854</text>
+                            <line class="net-line" x2="390" y2="0" style="stroke-dasharray:2, 2;stroke:rgb(67, 67, 67);"></line>
+                        </g>
+                        <path class="domain" d="M0,0H0V208.90625H0" style="fill:none;stroke:pink;"></path>
+                        <g class="axis-unit" transform="translate(0,-18)"><text dy=".32em" x="-10" y="0" transform=""
+                                style="text-anchor:end;font-weight:400;fill:deepskyblue;" font-family="Microsoft Yahei">单位</text></g>
+                    </g>
+                    <g class="axis axis3" transform="translate(435,0)" style="display:none;" id="zaxis">
+                        <g class="tick" transform="translate(0,208.90625)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:pink;"></line>
+                            <text dy=".32em" x="10" y="0" transform="" style="text-anchor:start;fill:deepskyblue;font-weight:normal;stroke-width:0;"
+                                font-family="Microsoft Yahei">400</text>
+                        </g>
+                        <path class="domain" d="M0,0H0V208.90625H0" style="fill:none;stroke:pink;"></path>
+                        <g class="axis-unit" transform="translate(0,-18)"><text dy=".32em" x="10" y="0" transform=""
+                                style="text-anchor:start;font-weight:400;fill:deepskyblue;" font-family="Microsoft Yahei">单位</text></g>
+                    </g>
+                    <g class="series" transform="translate(45, 0)">
+                        <g class="series-group">
+                            <rect class="serie-bg" x="24.231738035264485" y="-1" width="14.08060453400504" height="210.90625"
+                                style="fill:lightgray;fill-opacity:0.35;stroke:none;"></rect>
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="24.231738035264485" y="151.26427943760984" width="14.08060453400504"
+                                    height="57.641970562390156" style="fill:url(&quot;#multim58v3kqpw0i&quot;);"></rect>
+                                <text class="serie-label serie1-label" x="31.272040302267005" y="151.26427943760984"
+                                    dx="0" dy="-1em" font-family="Microsoft Yahei" style="text-anchor:middle;font-weight:normal;fill:red;stroke:red;stroke-width:0;">235.5</text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <rect class="serie-bg" x="56.977329974811084" y="-1" width="14.08060453400504" height="210.90625"
+                                style="fill:lightgray;fill-opacity:0.35;stroke:none;"></rect>
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="56.977329974811084" y="170.64960456942003" width="14.08060453400504"
+                                    height="38.256645430579965" style="fill:url(&quot;#multim58v3kqpw0i&quot;);"></rect>
+                                <text class="serie-label serie1-label" x="64.0176322418136" y="170.64960456942003"
+                                    dx="0" dy="-1em" font-family="Microsoft Yahei" style="text-anchor:middle;font-weight:normal;fill:red;stroke:red;stroke-width:0;">156.3</text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <rect class="serie-bg" x="89.72292191435768" y="-1" width="14.08060453400504" height="210.90625"
+                                style="fill:lightgray;fill-opacity:0.35;stroke:none;"></rect>
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="89.72292191435768" y="178.67787053309902" width="14.08060453400504"
+                                    height="30.228379466900975" style="fill:url(&quot;#multim58v3kqpw0i&quot;);"></rect>
+                                <text class="serie-label serie1-label" x="96.7632241813602" y="178.67787053309902"
+                                    dx="0" dy="-1em" font-family="Microsoft Yahei" style="text-anchor:middle;font-weight:normal;fill:red;stroke:red;stroke-width:0;">123.5</text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <rect class="serie-bg" x="122.46851385390428" y="-1" width="14.08060453400504" height="210.90625"
+                                style="fill:lightgray;fill-opacity:0.35;stroke:none;"></rect>
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="122.46851385390428" y="105.24860867018158" width="14.08060453400504"
+                                    height="103.65764132981842" style="fill:url(&quot;#multim58v3kqpw0i&quot;);"></rect>
+                                <text class="serie-label serie1-label" x="129.5088161209068" y="105.24860867018158"
+                                    dx="0" dy="-1em" font-family="Microsoft Yahei" style="text-anchor:middle;font-weight:normal;fill:red;stroke:red;stroke-width:0;">423.5</text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <rect class="serie-bg" x="155.21410579345087" y="-1" width="14.08060453400504" height="210.90625"
+                                style="fill:lightgray;fill-opacity:0.35;stroke:none;"></rect>
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="155.21410579345087" y="97.17138986526069" width="14.08060453400504"
+                                    height="111.73486013473931" style="fill:url(&quot;#multim58v3kqpw0i&quot;);"></rect>
+                                <text class="serie-label serie1-label" x="162.2544080604534" y="97.17138986526069"
+                                    dx="0" dy="-1em" font-family="Microsoft Yahei" style="text-anchor:middle;font-weight:normal;fill:red;stroke:red;stroke-width:0;">456.5</text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <rect class="serie-bg" x="187.95969773299748" y="-1" width="14.08060453400504" height="210.90625"
+                                style="fill:lightgray;fill-opacity:0.35;stroke:none;"></rect>
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="187.95969773299748" y="121.64781048623315" width="14.08060453400504"
+                                    height="87.25843951376685" style="fill:url(&quot;#multim58v3kqpw0i&quot;);"></rect>
+                                <text class="serie-label serie1-label" x="195" y="121.64781048623315" dx="0" dy="-1em"
+                                    font-family="Microsoft Yahei" style="text-anchor:middle;font-weight:normal;fill:red;stroke:red;stroke-width:0;">356.5</text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <rect class="serie-bg" x="220.7052896725441" y="-1" width="14.08060453400504" height="210.90625"
+                                style="fill:lightgray;fill-opacity:0.35;stroke:none;"></rect>
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="220.7052896725441" y="97.17138986526069" width="14.08060453400504"
+                                    height="111.73486013473931" style="fill:url(&quot;#multim58v3kqpw0i&quot;);"></rect>
+                                <text class="serie-label serie1-label" x="227.7455919395466" y="97.17138986526069"
+                                    dx="0" dy="-1em" font-family="Microsoft Yahei" style="text-anchor:middle;font-weight:normal;fill:red;stroke:red;stroke-width:0;">456.5</text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <rect class="serie-bg" x="253.45088161209065" y="-1" width="14.08060453400504" height="210.90625"
+                                style="fill:lightgray;fill-opacity:0.35;stroke:none;"></rect>
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="253.45088161209065" y="0" width="14.08060453400504"
+                                    height="208.90625" style="fill:url(&quot;#multim58v3kqpw0i&quot;);"></rect>
+                                <text class="serie-label serie1-label" x="260.49118387909317" y="0" dx="0" dy="-1em"
+                                    font-family="Microsoft Yahei" style="text-anchor:middle;font-weight:normal;fill:red;stroke:red;stroke-width:0;">853.5</text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <rect class="serie-bg" x="286.19647355163727" y="-1" width="14.08060453400504" height="210.90625"
+                                style="fill:lightgray;fill-opacity:0.35;stroke:none;"></rect>
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="286.19647355163727" y="97.17138986526069" width="14.08060453400504"
+                                    height="111.73486013473931" style="fill:url(&quot;#multim58v3kqpw0i&quot;);"></rect>
+                                <text class="serie-label serie1-label" x="293.2367758186398" y="97.17138986526069"
+                                    dx="0" dy="-1em" font-family="Microsoft Yahei" style="text-anchor:middle;font-weight:normal;fill:red;stroke:red;stroke-width:0;">456.5</text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <rect class="serie-bg" x="318.9420654911839" y="-1" width="14.08060453400504" height="210.90625"
+                                style="fill:lightgray;fill-opacity:0.35;stroke:none;"></rect>
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="318.9420654911839" y="97.17138986526069" width="14.08060453400504"
+                                    height="111.73486013473931" style="fill:url(&quot;#multim58v3kqpw0i&quot;);"></rect>
+                                <text class="serie-label serie1-label" x="325.9823677581864" y="97.17138986526069"
+                                    dx="0" dy="-1em" font-family="Microsoft Yahei" style="text-anchor:middle;font-weight:normal;fill:red;stroke:red;stroke-width:0;">456.5</text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <rect class="serie-bg" x="351.6876574307305" y="-1" width="14.08060453400504" height="210.90625"
+                                style="fill:lightgray;fill-opacity:0.35;stroke:none;"></rect>
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="351.6876574307305" y="97.17138986526069" width="14.08060453400504"
+                                    height="111.73486013473931" style="fill:url(&quot;#multim58v3kqpw0i&quot;);"></rect>
+                                <text class="serie-label serie1-label" x="358.727959697733" y="97.17138986526069"
+                                    dx="0" dy="-1em" font-family="Microsoft Yahei" style="text-anchor:middle;font-weight:normal;fill:red;stroke:red;stroke-width:0;">456.5</text>
+                            </g>
+                        </g>
+                    </g>
+                    <g class="line-g" transform="translate(45, 0)">
+                        <path class="serie serie1" d="M31.272040302267005,208.90625L64.0176322418136,208.90625L96.7632241813602,208.90625L129.5088161209068,208.90625L162.2544080604534,208.90625L195,208.90625L227.7455919395466,208.90625L260.49118387909317,208.90625L293.2367758186398,208.90625L325.9823677581864,208.90625L358.727959697733,208.90625"
+                            style="stroke:orange;stroke-width:1;stroke-dasharray:4, 4;fill:none;"></path>
+                    </g>
+                    <g class="scatterplot-g" transform="translate(45, 0)">
+                        <g class="series-group">
+                            <circle class="serie serie1" cx="31.272040302267005" cy="208.90625" r="4" style="fill:orange;stroke:none;stroke-width:0;"></circle>
+                        </g>
+                        <g class="series-group">
+                            <circle class="serie serie1" cx="64.0176322418136" cy="208.90625" r="4" style="fill:orange;stroke:none;stroke-width:0;"></circle>
+                        </g>
+                        <g class="series-group">
+                            <circle class="serie serie1" cx="96.7632241813602" cy="208.90625" r="4" style="fill:orange;stroke:none;stroke-width:0;"></circle>
+                        </g>
+                        <g class="series-group">
+                            <circle class="serie serie1" cx="129.5088161209068" cy="208.90625" r="4" style="fill:orange;stroke:none;stroke-width:0;"></circle>
+                        </g>
+                        <g class="series-group">
+                            <circle class="serie serie1" cx="162.2544080604534" cy="208.90625" r="4" style="fill:orange;stroke:none;stroke-width:0;"></circle>
+                        </g>
+                        <g class="series-group">
+                            <circle class="serie serie1" cx="195" cy="208.90625" r="4" style="fill:orange;stroke:none;stroke-width:0;"></circle>
+                        </g>
+                        <g class="series-group">
+                            <circle class="serie serie1" cx="227.7455919395466" cy="208.90625" r="4" style="fill:orange;stroke:none;stroke-width:0;"></circle>
+                        </g>
+                        <g class="series-group">
+                            <circle class="serie serie1" cx="260.49118387909317" cy="208.90625" r="4" style="fill:orange;stroke:none;stroke-width:0;"></circle>
+                        </g>
+                        <g class="series-group">
+                            <circle class="serie serie1" cx="293.2367758186398" cy="208.90625" r="4" style="fill:orange;stroke:none;stroke-width:0;"></circle>
+                        </g>
+                        <g class="series-group">
+                            <circle class="serie serie1" cx="325.9823677581864" cy="208.90625" r="4" style="fill:orange;stroke:none;stroke-width:0;"></circle>
+                        </g>
+                        <g class="series-group">
+                            <circle class="serie serie1" cx="358.727959697733" cy="208.90625" r="4" style="fill:orange;stroke:none;stroke-width:0;"></circle>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+            <svg class="con-svg" width="352" height="292">
+                <g class="con-g bar-chart-g" transform="translate(10,0)">
+                    <defs>
+                        <linearGradient id="multi6fvjurcqsfx" x1="0" y1="0" x2="1.0000000000000002" y2="1.2246467991473535e-16">
+                            <stop offset="0%" style="stop-color:#9E5DB7;stop-opacity:1"></stop>
+                            <stop offset="100%" style="stop-color:#E38A99;stop-opacity:1"></stop>
+                        </linearGradient>
+                    </defs>
+                    <g class="axis axis1" transform="translate(36, 266)" id="xaxis">
+                        <g class="tick" transform="translate(0,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".71em" y="10" x="0" style="text-anchor:middle;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">0</text>
+                        </g>
+                        <g class="tick" transform="translate(51.199999999999996,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".71em" y="10" x="0" style="text-anchor:middle;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">5</text>
+                            <line class="net-line" y2="-266" x2="0" style="stroke-dasharray:2, 2;stroke:rgb(255, 255, 255);"></line>
+                        </g>
+                        <g class="tick" transform="translate(102.39999999999999,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".71em" y="10" x="0" style="text-anchor:middle;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">10</text>
+                            <line class="net-line" y2="-266" x2="0" style="stroke-dasharray:2, 2;stroke:rgb(255, 255, 255);"></line>
+                        </g>
+                        <g class="tick" transform="translate(153.6,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".71em" y="10" x="0" style="text-anchor:middle;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">14</text>
+                            <line class="net-line" y2="-266" x2="0" style="stroke-dasharray:2, 2;stroke:rgb(255, 255, 255);"></line>
+                        </g>
+                        <g class="tick" transform="translate(204.79999999999998,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".71em" y="10" x="0" style="text-anchor:middle;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">19</text>
+                            <line class="net-line" y2="-266" x2="0" style="stroke-dasharray:2, 2;stroke:rgb(255, 255, 255);"></line>
+                        </g>
+                        <g class="tick" transform="translate(256,0)" style="opacity:1;">
+                            <line y2="0" x2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".71em" y="10" x="0" style="text-anchor:middle;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">24</text>
+                            <line class="net-line" y2="-266" x2="0" style="stroke-dasharray:2, 2;stroke:rgb(255, 255, 255);"></line>
+                        </g>
+                        <path class="domain" d="M0,0V0H256V0" style="fill:none;stroke:lightgray;"></path>
+                        <g class="axis-unit" transform="translate(292, 0)"><text dy=".71em" x="0" y="10" style="text-anchor:middle;font-weight:400;fill:orange;font-family:Microsoft Yahei;">单位</text>
+                        </g>
+                    </g>
+                    <g class="axis axis2" id="yaxis" transform="translate(34 0)" style="display:block;">
+                        <g class="tick" transform="translate(0,256.3112582781457)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".32em" x="-10" y="0" style="text-anchor:end;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">长沙</text>
+                            <line class="net-line" x2="256" y2="0" style="stroke-dasharray:2, 2;stroke:red;"></line>
+                        </g>
+                        <g class="tick" transform="translate(0,221.0794701986755)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".32em" x="-10" y="0" style="text-anchor:end;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">杭州</text>
+                            <line class="net-line" x2="256" y2="0" style="stroke-dasharray:2, 2;stroke:red;"></line>
+                        </g>
+                        <g class="tick" transform="translate(0,185.84768211920527)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".32em" x="-10" y="0" style="text-anchor:end;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">北京</text>
+                            <line class="net-line" x2="256" y2="0" style="stroke-dasharray:2, 2;stroke:red;"></line>
+                        </g>
+                        <g class="tick" transform="translate(0,150.61589403973508)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".32em" x="-10" y="0" style="text-anchor:end;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">安徽</text>
+                            <line class="net-line" x2="256" y2="0" style="stroke-dasharray:2, 2;stroke:red;"></line>
+                        </g>
+                        <g class="tick" transform="translate(0,115.38410596026492)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".32em" x="-10" y="0" style="text-anchor:end;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">成都</text>
+                            <line class="net-line" x2="256" y2="0" style="stroke-dasharray:2, 2;stroke:red;"></line>
+                        </g>
+                        <g class="tick" transform="translate(0,80.15231788079471)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".32em" x="-10" y="0" style="text-anchor:end;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">合肥</text>
+                            <line class="net-line" x2="256" y2="0" style="stroke-dasharray:2, 2;stroke:red;"></line>
+                        </g>
+                        <g class="tick" transform="translate(0,44.920529801324506)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".32em" x="-10" y="0" style="text-anchor:end;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">深圳</text>
+                            <line class="net-line" x2="256" y2="0" style="stroke-dasharray:2, 2;stroke:red;"></line>
+                        </g>
+                        <g class="tick" transform="translate(0,9.688741721854305)" style="opacity:1;">
+                            <line x2="0" y2="0" style="fill:none;stroke:lightgray;"></line>
+                            <text dy=".32em" x="-10" y="0" style="text-anchor:end;fill:orange;font-weight:normal;stroke-width:0;font-family:Microsoft Yahei;">上海</text>
+                            <line class="net-line" x2="256" y2="0" style="stroke-dasharray:2, 2;stroke:red;"></line>
+                        </g>
+                        <path class="domain" d="M0,256.3112582781457V9.688741721854305" style="fill:none;stroke:lightgray;"></path>
+                    </g>
+                    <g class="series" transform="translate(36, 0)">
+                        <g class="series-group">
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="0" y="252.61192052980132" width="256" height="7.398675496688741"
+                                    __width="256" __x="0" rx="3.6993377483443703" ry="3.6993377483443703" style="fill:url(#multi6fvjurcqsfx);stroke:#333"></rect>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="256.3112582781457" dx="0" dy="0"
+                                    style="text-anchor:start;font-weight:normal;fill:#fff;stroke:#fff;stroke-width:0;vertical-align:middle;alignment-baseline:middle;line-height:7.39868;height:7.39868px;font-family:Microsoft Yahei;">24</text>
+                            </g>
+                            <rect class="serie-bg" y="250.61192052980132" width="260" height="11.39867549668874" rx="5.69933774834437"
+                                ry="5.69933774834437" x="-2" style="fill:none;stroke:rgba(255, 255, 255, 0.2);stroke-width:1;stroke-dashoffset:7.60962;stroke-dasharray:263.821, 2.68575;"></rect>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="256.3112582781457" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="256.3112582781457" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="256.3112582781457" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="0" y="217.38013245033113" width="149.33333333333334"
+                                    height="7.398675496688741" __width="149.33333333333334" __x="0" rx="3.6993377483443703"
+                                    ry="3.6993377483443703" style="fill:url(#multi6fvjurcqsfx);stroke:#333"></rect>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="221.0794701986755" dx="0" dy="0"
+                                    style="text-anchor:start;font-weight:normal;fill:#fff;stroke:#fff;stroke-width:0;vertical-align:middle;alignment-baseline:middle;line-height:7.39868;height:7.39868px;font-family:Microsoft Yahei;">14</text>
+                            </g>
+                            <rect class="serie-bg" y="215.38013245033113" width="260" height="11.39867549668874" rx="5.69933774834437"
+                                ry="5.69933774834437" x="-2" style="fill:none;stroke:rgba(255, 255, 255, 0.2);stroke-width:1;stroke-dashoffset:7.60962;stroke-dasharray:263.821, 2.68575;"></rect>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="221.0794701986755" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="221.0794701986755" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="221.0794701986755" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="0" y="182.1483443708609" width="106.66666666666667"
+                                    height="7.398675496688741" __width="106.66666666666667" __x="0" rx="3.6993377483443703"
+                                    ry="3.6993377483443703" style="fill:url(#multi6fvjurcqsfx);stroke:#333"></rect>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="185.84768211920527" dx="0" dy="0"
+                                    style="text-anchor:start;font-weight:normal;fill:#fff;stroke:#fff;stroke-width:0;vertical-align:middle;alignment-baseline:middle;line-height:7.39868;height:7.39868px;font-family:Microsoft Yahei;">10</text>
+                            </g>
+                            <rect class="serie-bg" y="180.1483443708609" width="260" height="11.39867549668874" rx="5.69933774834437"
+                                ry="5.69933774834437" x="-2" style="fill:none;stroke:rgba(255, 255, 255, 0.2);stroke-width:1;stroke-dashoffset:7.60962;stroke-dasharray:263.821, 2.68575;"></rect>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="185.84768211920527" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="185.84768211920527" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="185.84768211920527" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="0" y="146.91655629139072" width="53.333333333333336"
+                                    height="7.398675496688741" __width="53.333333333333336" __x="0" rx="3.6993377483443703"
+                                    ry="3.6993377483443703" style="fill:url(#multi6fvjurcqsfx);stroke:#333"></rect>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="150.61589403973508" dx="0" dy="0"
+                                    style="text-anchor:start;font-weight:normal;fill:#fff;stroke:#fff;stroke-width:0;vertical-align:middle;alignment-baseline:middle;line-height:7.39868;height:7.39868px;font-family:Microsoft Yahei;">5</text>
+                            </g>
+                            <rect class="serie-bg" y="144.91655629139072" width="260" height="11.39867549668874" rx="5.69933774834437"
+                                ry="5.69933774834437" x="-2" style="fill:none;stroke:rgba(255, 255, 255, 0.2);stroke-width:1;stroke-dashoffset:7.60962;stroke-dasharray:263.821, 2.68575;"></rect>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="150.61589403973508" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="150.61589403973508" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="150.61589403973508" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="0" y="111.68476821192054" width="96" height="7.398675496688741"
+                                    __width="96" __x="0" rx="3.6993377483443703" ry="3.6993377483443703" style="fill:url(#multi6fvjurcqsfx);stroke:#333"></rect>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="115.38410596026492" dx="0" dy="0"
+                                    style="text-anchor:start;font-weight:normal;fill:#fff;stroke:#fff;stroke-width:0;vertical-align:middle;alignment-baseline:middle;line-height:7.39868;height:7.39868px;font-family:Microsoft Yahei;">9</text>
+                            </g>
+                            <rect class="serie-bg" y="109.68476821192054" width="260" height="11.39867549668874" rx="5.69933774834437"
+                                ry="5.69933774834437" x="-2" style="fill:none;stroke:rgba(255, 255, 255, 0.2);stroke-width:1;stroke-dashoffset:7.60962;stroke-dasharray:263.821, 2.68575;"></rect>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="115.38410596026492" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="115.38410596026492" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="115.38410596026492" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="0" y="76.45298013245034" width="21.333333333333332"
+                                    height="7.398675496688741" __width="21.333333333333332" __x="0" rx="3.6993377483443703"
+                                    ry="3.6993377483443703" style="fill:url(#multi6fvjurcqsfx);stroke:#333"></rect>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="80.15231788079471" dx="0" dy="0"
+                                    style="text-anchor:start;font-weight:normal;fill:#fff;stroke:#fff;stroke-width:0;vertical-align:middle;alignment-baseline:middle;line-height:7.39868;height:7.39868px;font-family:Microsoft Yahei;">2</text>
+                            </g>
+                            <rect class="serie-bg" y="74.45298013245034" width="260" height="11.39867549668874" rx="5.69933774834437"
+                                ry="5.69933774834437" x="-2" style="fill:none;stroke:rgba(255, 255, 255, 0.2);stroke-width:1;stroke-dashoffset:7.60962;stroke-dasharray:263.821, 2.68575;"></rect>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="80.15231788079471" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="80.15231788079471" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="80.15231788079471" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="0" y="41.221192052980136" width="138.66666666666666"
+                                    height="7.398675496688741" __width="138.66666666666666" __x="0" rx="3.6993377483443703"
+                                    ry="3.6993377483443703" style="fill:url(#multi6fvjurcqsfx);stroke:#333"></rect>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="44.920529801324506" dx="0" dy="0"
+                                    style="text-anchor:start;font-weight:normal;fill:#fff;stroke:#fff;stroke-width:0;vertical-align:middle;alignment-baseline:middle;line-height:7.39868;height:7.39868px;font-family:Microsoft Yahei;">13</text>
+                            </g>
+                            <rect class="serie-bg" y="39.221192052980136" width="260" height="11.39867549668874" rx="5.69933774834437"
+                                ry="5.69933774834437" x="-2" style="fill:none;stroke:rgba(255, 255, 255, 0.2);stroke-width:1;stroke-dashoffset:7.60962;stroke-dasharray:263.821, 2.68575;"></rect>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="44.920529801324506" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="44.920529801324506" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="44.920529801324506" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                        </g>
+                        <g class="series-group">
+                            <g class="serie serie-single">
+                                <rect class="serie serie1" x="0" y="5.989403973509934" width="245.33333333333334"
+                                    height="7.398675496688741" __width="245.33333333333334" __x="0" rx="3.6993377483443703"
+                                    ry="3.6993377483443703" style="fill:url(#multi6fvjurcqsfx);stroke:#333"></rect>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="9.688741721854305" dx="0" dy="0"
+                                    style="text-anchor:start;font-weight:normal;fill:#fff;stroke:#fff;stroke-width:0;vertical-align:middle;alignment-baseline:middle;line-height:7.39868;height:7.39868px;font-family:Microsoft Yahei;">23</text>
+                            </g>
+                            <rect class="serie-bg" y="3.9894039735099343" width="260" height="11.39867549668874" rx="5.69933774834437"
+                                ry="5.69933774834437" x="-2" style="fill:none;stroke:rgba(255, 255, 255, 0.2);stroke-width:1;stroke-dashoffset:7.60962;stroke-dasharray:263.821, 2.68575;"></rect>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="9.688741721854305" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="9.688741721854305" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                            <g class="serie-text">
+                                <text class="serie-label serie1-label" x="0" y="9.688741721854305" dx="0" dy="0"
+                                    style="font-family:Microsoft Yahei;text-anchor:start;"></text>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+            <svg class="chartSvg" width="870" height="617">
+                <g class="axis y-axis" transform="translate(80 ,10)">
+                    <g class="y-axis label" transform="translate(0,584)">
+                        <line class="y-line ticks" x1="28" y1="0" x2="603" style="stroke-width: 1; stroke-opacity: 1;"></line>
+                        <text class="text" text-anchor="end" transform="translate(28,3)">0</text>
+                        <text class="text" text-anchor="start" transform="translate(613,3)">0</text>
+                    </g>
+                    <g class="y-axis label" transform="translate(0,438)">
+                        <line class="y-line ticks" x1="28" y1="0" x2="603" style="stroke-width: 0.5; stroke-opacity: 1;"></line>
+                        <text class="text" text-anchor="end" transform="translate(28,3)">5K</text>
+                        <text class="text" text-anchor="start" transform="translate(613,3)">200K</text>
+                    </g>
+                    <g class="y-axis label" transform="translate(0,292)">
+                        <line class="y-line ticks" x1="28" y1="0" x2="603" style="stroke-width: 0.5; stroke-opacity: 1;"></line>
+                        <text class="text" text-anchor="end" transform="translate(28,3)">10K</text>
+                        <text class="text" text-anchor="start" transform="translate(613,3)">400K</text>
+                    </g>
+                    <g class="y-axis label" transform="translate(0,146)">
+                        <line class="y-line ticks" x1="28" y1="0" x2="603" style="stroke-width: 0.5; stroke-opacity: 1;"></line>
+                        <text class="text" text-anchor="end" transform="translate(28,3)">15K</text>
+                        <text class="text" text-anchor="start" transform="translate(613,3)">600K</text>
+                    </g>
+                    <g class="y-axis label" transform="translate(0,0)">
+                        <line class="y-line ticks" x1="28" y1="0" x2="603" style="stroke-width: 0.5; stroke-opacity: 1;"></line>
+                        <text class="text" text-anchor="end" transform="translate(28,3)">20K</text>
+                        <text class="text" text-anchor="start" transform="translate(613,3)">800K</text>
+                    </g>
+                </g>
+                <g class="axis x-axis" transform="translate(108 , 594)">
+                    <g class="x-axis label" transform="translate(0,0)">
+                        <text class="text" transform="translate(47.916666666666664,20) " text-anchor="middle">西南<title>西南</title></text>
+                        <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(0,0)"></line>
+                    </g>
+                    <g class="x-axis label" transform="translate(95.83333333333333,0)">
+                        <text class="text" transform="translate(47.916666666666664,20) " text-anchor="middle">西北<title>西北</title></text>
+                        <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(0,0)"></line>
+                    </g>
+                    <g class="x-axis label" transform="translate(191.66666666666666,0)">
+                        <text class="text" transform="translate(47.916666666666664,20) " text-anchor="middle">东北<title>东北</title></text>
+                        <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(0,0)"></line>
+                    </g>
+                    <g class="x-axis label" transform="translate(287.5,0)">
+                        <text class="text" transform="translate(47.916666666666664,20) " text-anchor="middle">华东<title>华东</title></text>
+                        <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(0,0)"></line>
+                    </g>
+                    <g class="x-axis label" transform="translate(383.3333333333333,0)">
+                        <text class="text" transform="translate(47.916666666666664,20) " text-anchor="middle">华北<title>华北</title></text>
+                        <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(0,0)"></line>
+                    </g>
+                    <g class="x-axis label" transform="translate(479.16666666666663,0)">
+                        <text class="text" transform="translate(47.916666666666664,20) " text-anchor="middle">华南<title>华南</title></text>
+                        <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(0,0)"></line>
+                    </g>
+                    <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(575,0)"></line>
+                </g>
+                <defs>
+                    <clipPath id="clipPath0">
+                        <rect x="108" y="-10" width="870" height="595"></rect>
+                    </clipPath>
+                </defs>
+                <g class="chart-detail" clip-path="url(#clipPath0)" transform="translate(0 ,10)">
+                    <g class="chartset" legend="defaultLegend" transform="translate(108 , -23)">
+                        <g class="columns" id="columnChart" style="cursor:pointer;" xLabel="西南" transform="translate(0,607)">
+                            <rect class="bars" z-index="3" color="#37a2da" stroke="none" height="34.03049574927478"
+                                x="0" y="-34.03049574927478" transform="translate(19.166666666666668,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="165109527438647454621105758045911889424"
+                                style="fill: rgb(55, 162, 218);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="165109527438647454621105758045911889424" value="1165.4279366189992"
+                                text-anchor="middle" transform="translate(28.75,-34.03049574927478)" style="fill: inherit; display: none;">1165.43</text>
+                            <rect class="bars" z-index="3" color="#67e0e3" stroke="none" height="2.036919000000005"
+                                x="0" y="-2.036919000000005" transform="translate(38.33333333333333,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="312137425895135316054486182650650719914"
+                                style="fill: rgb(103, 224, 227);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="312137425895135316054486182650650719914" value="2790.3000000000065"
+                                text-anchor="middle" transform="translate(47.916666666666664,-2.036919000000005)"
+                                style="fill: inherit; display: none;">2790.3</text>
+                            <rect class="bars" z-index="3" color="#ffdb5c" stroke="none" height="47.065111150000014"
+                                x="0" y="-47.065111150000014" transform="translate(57.5,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="39971455452049477408528439323122414972"
+                                style="fill: rgb(255, 219, 92);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="39971455452049477408528439323122414972" value="64472.75500000001"
+                                text-anchor="middle" transform="translate(67.08333333333333,-47.065111150000014)"
+                                style="fill: inherit; display: none;">64472.76</text>
+                        </g>
+                        <g class="columns" id="columnChart" style="cursor:pointer;" xLabel="西北" transform="translate(95.83333333333333,607)">
+                            <rect class="bars" z-index="3" color="#37a2da" stroke="none" height="74.64973902856042"
+                                x="0" y="-74.64973902856042" transform="translate(19.166666666666668,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="165109527438647454621105758045911889424"
+                                style="fill: rgb(55, 162, 218);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="165109527438647454621105758045911889424" value="2556.4979119370005"
+                                text-anchor="middle" transform="translate(28.75,-74.64973902856042)" style="fill: inherit; display: none;">2556.5</text>
+                            <rect class="bars" z-index="3" color="#67e0e3" stroke="none" height="4.731202999999981"
+                                x="0" y="-4.731202999999981" transform="translate(38.33333333333333,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="312137425895135316054486182650650719914"
+                                style="fill: rgb(103, 224, 227);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="312137425895135316054486182650650719914" value="6481.099999999975"
+                                text-anchor="middle" transform="translate(47.916666666666664,-4.731202999999981)"
+                                style="fill: inherit; display: none;">6481.1</text>
+                            <rect class="bars" z-index="3" color="#ffdb5c" stroke="none" height="116.38974511" x="0"
+                                y="-116.38974511" transform="translate(57.5,0)" width="19.166666666666664" legend="defaultLegend"
+                                legendIndex="0" yAxisId="39971455452049477408528439323122414972" style="fill: rgb(255, 219, 92);"></rect><text
+                                class="labels show-labels" legend="defaultLegend" legendIndex="0" yAxisId="39971455452049477408528439323122414972"
+                                value="159438.007" text-anchor="middle" transform="translate(67.08333333333333,-116.38974511)"
+                                style="fill: inherit; display: none;">159438.01</text>
+                        </g>
+                        <g class="columns" id="columnChart" style="cursor:pointer;" xLabel="东北" transform="translate(191.66666666666666,607)">
+                            <rect class="bars" z-index="3" color="#37a2da" stroke="none" height="132.564922132565"
+                                x="0" y="-132.564922132565" transform="translate(19.166666666666668,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="165109527438647454621105758045911889424"
+                                style="fill: rgb(55, 162, 218);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="165109527438647454621105758045911889424" value="4539.8945935809925"
+                                text-anchor="middle" transform="translate(28.75,-132.564922132565)" style="fill: inherit; display: none;">4539.89</text>
+                            <rect class="bars" z-index="3" color="#67e0e3" stroke="none" height="7.5768159999999405"
+                                x="0" y="-7.5768159999999405" transform="translate(38.33333333333333,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="312137425895135316054486182650650719914"
+                                style="fill: rgb(103, 224, 227);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="312137425895135316054486182650650719914" value="10379.199999999919"
+                                text-anchor="middle" transform="translate(47.916666666666664,-7.5768159999999405)"
+                                style="fill: inherit; display: none;">10379.2</text>
+                            <rect class="bars" z-index="3" color="#ffdb5c" stroke="none" height="193.67339679000003"
+                                x="0" y="-193.67339679000003" transform="translate(57.5,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="39971455452049477408528439323122414972"
+                                style="fill: rgb(255, 219, 92);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="39971455452049477408528439323122414972" value="265306.02300000004"
+                                text-anchor="middle" transform="translate(67.08333333333333,-193.67339679000003)"
+                                style="fill: inherit; display: none;">265306.02</text>
+                        </g>
+                        <g class="columns" id="columnChart" style="cursor:pointer;" xLabel="华东" transform="translate(287.5,607)">
+                            <rect class="bars" z-index="3" color="#37a2da" stroke="none" height="170.50386204846072"
+                                x="0" y="-170.50386204846072" transform="translate(19.166666666666668,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="165109527438647454621105758045911889424"
+                                style="fill: rgb(55, 162, 218);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="165109527438647454621105758045911889424" value="5839.173357823997"
+                                text-anchor="middle" transform="translate(28.75,-170.50386204846072)" style="fill: inherit; display: none;">5839.17</text>
+                            <rect class="bars" z-index="3" color="#67e0e3" stroke="none" height="9.972675999999892"
+                                x="0" y="-9.972675999999892" transform="translate(38.33333333333333,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="312137425895135316054486182650650719914"
+                                style="fill: rgb(103, 224, 227);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="312137425895135316054486182650650719914" value="13661.199999999852"
+                                text-anchor="middle" transform="translate(47.916666666666664,-9.972675999999892)"
+                                style="fill: inherit; display: none;">13661.2</text>
+                            <rect class="bars" z-index="3" color="#ffdb5c" stroke="none" height="235.38671661000012"
+                                x="0" y="-235.38671661000012" transform="translate(57.5,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="39971455452049477408528439323122414972"
+                                style="fill: rgb(255, 219, 92);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="39971455452049477408528439323122414972" value="322447.5570000002"
+                                text-anchor="middle" transform="translate(67.08333333333333,-235.38671661000012)"
+                                style="fill: inherit; display: none;">322447.56</text>
+                        </g>
+                        <g class="columns" id="columnChart" style="cursor:pointer;" xLabel="华北" transform="translate(383.3333333333333,607)">
+                            <rect class="bars" z-index="3" color="#37a2da" stroke="none" height="189.73925924991923"
+                                x="0" y="-189.73925924991923" transform="translate(19.166666666666668,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="165109527438647454621105758045911889424"
+                                style="fill: rgb(55, 162, 218);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="165109527438647454621105758045911889424" value="6497.919837326001"
+                                text-anchor="middle" transform="translate(28.75,-189.73925924991923)" style="fill: inherit; display: none;">6497.92</text>
+                            <rect class="bars" z-index="3" color="#67e0e3" stroke="none" height="10.981462999999888"
+                                x="0" y="-10.981462999999888" transform="translate(38.33333333333333,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="312137425895135316054486182650650719914"
+                                style="fill: rgb(103, 224, 227);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="312137425895135316054486182650650719914" value="15043.099999999846"
+                                text-anchor="middle" transform="translate(47.916666666666664,-10.981462999999888)"
+                                style="fill: inherit; display: none;">15043.1</text>
+                            <rect class="bars" z-index="3" color="#ffdb5c" stroke="none" height="265.06788516" x="0"
+                                y="-265.06788516" transform="translate(57.5,0)" width="19.166666666666664" legend="defaultLegend"
+                                legendIndex="0" yAxisId="39971455452049477408528439323122414972" style="fill: rgb(255, 219, 92);"></rect><text
+                                class="labels show-labels" legend="defaultLegend" legendIndex="0" yAxisId="39971455452049477408528439323122414972"
+                                value="363106.692" text-anchor="middle" transform="translate(67.08333333333333,-265.06788516)"
+                                style="fill: inherit; display: none;">363106.69</text>
+                        </g>
+                        <g class="columns" id="columnChart" style="cursor:pointer;" xLabel="华南" transform="translate(479.16666666666663,607)">
+                            <rect class="bars" z-index="3" color="#37a2da" stroke="none" height="346.87921632025217"
+                                x="0" y="-346.87921632025217" transform="translate(19.166666666666668,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="165109527438647454621105758045911889424"
+                                style="fill: rgb(55, 162, 218);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="165109527438647454621105758045911889424" value="11879.425216446993"
+                                text-anchor="middle" transform="translate(28.75,-346.87921632025217)" style="fill: inherit; display: none;">11879.43</text>
+                            <rect class="bars" z-index="3" color="#67e0e3" stroke="none" height="20.651554000000413"
+                                x="0" y="-20.651554000000413" transform="translate(38.33333333333333,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="312137425895135316054486182650650719914"
+                                style="fill: rgb(103, 224, 227);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="312137425895135316054486182650650719914" value="28289.800000000567"
+                                text-anchor="middle" transform="translate(47.916666666666664,-20.651554000000413)"
+                                style="fill: inherit; display: none;">28289.8</text>
+                            <rect class="bars" z-index="3" color="#ffdb5c" stroke="none" height="483.4703560700001"
+                                x="0" y="-483.4703560700001" transform="translate(57.5,0)" width="19.166666666666664"
+                                legend="defaultLegend" legendIndex="0" yAxisId="39971455452049477408528439323122414972"
+                                style="fill: rgb(255, 219, 92);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                legendIndex="0" yAxisId="39971455452049477408528439323122414972" value="662288.1590000001"
+                                text-anchor="middle" transform="translate(67.08333333333333,-483.4703560700001)"
+                                style="fill: inherit; display: none;">662288.16</text>
+                        </g>
+                    </g>
+                </g>
+            </svg>
+        </div>
+        <a class="get-screen">截取屏幕</a>
+    </div>
+</body>
+
+<!-- JQuery -->
+<script src="./jquery-1.9.1.min.js"></script>
+<!-- D3 -->
+<script src="./d3.v3.min.js"></script>
+<!-- Required to convert named colors to RGB -->
+<script src="./rgbcolor.min.js"></script>
+<!-- Optional if you want blur -->
+<script src="./stackblur.min.js"></script>
+<!-- Main canvg code -->
+<script src="./canvg.min.js"></script>
+<!-- html2canvas -->
+<script src="./html2canvas.min.js"></script>
+<!-- jspdf -->
+<script src="./jspdf.min.js"></script>
+
+<script>
+    // drawChart();
+
+    $(".container")
+        .on("click", "a.get-screen", function (e) {
+            var chartContainer = $(".chart-container"), width = chartContainer.width(), height = chartContainer.height(),
+                svg = chartContainer.find("svg"), svgText = chartContainer.find("text");
+            svg.each(function (i, e) {
+                var self = $(e),
+                    padding = self.css("padding"),
+                    margin = self.css("margin"),
+                    stroke = self.css("stroke"),
+                    overflow = self.css("overflow"),
+                    boxSizing = self.css("box-sizing");
+                self.css({
+                    "padding": padding,
+                    "margin": margin,
+                    "stroke": stroke,
+                    "overflow": overflow,
+                    "box-sizing": boxSizing
+                });
+            });
+            svgText.each(function (i, e) {
+                var self = $(e),
+                    fontFamily = self.css("font-family"),
+                    fontSize = self.css("font-size"),
+                    fontWeight = self.css("font-weight"),
+                    fill = self.css("fill"),
+                    stroke = self.css("stroke"),
+                    strokeWidth = self.css("stroke-width"),
+                    textAnchor = self.css("text-anchor");
+                self.css({
+                    "font-family": fontFamily,
+                    "font-size": fontSize,
+                    "font-weight": fontWeight,
+                    "fill": fill,
+                    "stroke": stroke,
+                    "stroke-width": strokeWidth,
+                    "text-anchor": textAnchor
+                });
+            });
+            var copyDom = chartContainer.clone();
+            copyDom.width(width + "px");
+            copyDom.height(height + "px");
+            svg2canvas(copyDom);
+            html2canvas(chartContainer[0], {
+                dpi: window.devicePixelRatio * 3,
+                height: height,
+                width: width
+            }).then(function (canvas) {
+                saveCanvAs(canvas);
+                copyDom.remove();
+            });
+        });
+
+    /**
+    * @param canvas canvas对象
+    * @param type 保存类型，默认为png，可选pdf，jpg，jpeg，bmp
+    * */
+    function saveCanvAs(canvas, name, type = "png") {
+        var type = type.toLowerCase();
+        if (type === "pdf") {
+            var imgData = canvas.toDataURL("image/png"), img = new Image();
+            img.src = imgData;
+            img.onload = function () {
+                // 此处需要注意，pdf横置和竖置两个属性，需要根据宽高的比例来调整，不然会出现显示不完全的问题
+                // 根据图片的尺寸设置pdf的规格，要在图片加载成功时执行，之所以要*0.225是因为比例问题
+                if (this.width > this.height) {
+                    var doc = new jsPDF("l", "mm", [this.width * 0.225, this.height * 0.225]);
+                } else {
+                    var doc = new jsPDF("p", "mm", [this.width * 0.225, this.height * 0.225]);
+                }
+                doc.addImage(imgData, "jpg", 0, 0, this.width * 0.225, this.height * 0.225);
+                doc.save(name || "pdf_" + new Date().getTime() + ".pdf");
+            }
+        } else {
+            if (type !== "png" && type !== "jpg" && type !== "jpeg" && type !== "bmp") {
+                type = "png";
+                console.log("Type error, saved as PNG by default!");
+            }
+            var imgData = canvas.toDataURL("image/" + type + ""), oA = document.createElement("a");
+            oA.download = name || type + "_" + new Date().getTime() + "." + type;
+            oA.href = imgData;
+            document.body.appendChild(oA);
+            oA.click();
+            oA.remove();
+        }
+    }
+
+    /**
+    * @param targetElem 截图区域
+    * */
+    function svg2canvas(targetElem) {
+        var svgElem = targetElem.find('svg');
+        svgElem.each(function (index, node) {
+            var self = $(this), canvas = document.createElement('canvas');
+            self.wrap("<div></div>");
+            var containerParent = self.parent();
+            canvg(canvas, self.parent().html());
+            containerParent.append(canvas);
+        });
+    }
+
+    // 把元素的样式全部转为行内样式
+    function toInlineStyle(node) {
+        var style = node.currentStyle ? node.currentStyle : getComputedStyle(node);
+        for (var k in style) {
+            if (isNaN(k) && k != 'cssText') {
+                if (style[k] == '0px' || style[k] == 'none' || style[k] == 'normal' || style[k] == 'auto' || !style[k]) {
+                    delete node.style[k]
+                } else {
+                    node.style[k] = style[k];
+                }
+            }
+        }
+    }
+</script>
+
+</html>

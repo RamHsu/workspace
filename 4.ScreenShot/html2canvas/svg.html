@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #eee;
+        }
+
+        ul,
+        li {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+
+        main {
+            position: absolute;
+            top: 50px;
+            right: 50px;
+            bottom: 50px;
+            left: 50px;
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chart-container {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .chart-container .chart-title {
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+        }
+
+        .chart-container .svgDiv {
+            flex-grow: 1;
+            height: calc(100% - 30px);
+            background-color: pink;
+        }
+
+        .chart-container .chart-x-title {
+            width: 100%;
+        }
+
+        .chart-container .chart-y-title {
+            margin-top: 30px;
+        }
+
+        .legend-list li {
+            min-width: 100px;
+            padding: 0 10px;
+            line-height: 30px;
+            cursor: pointer;
+        }
+
+        .legend-list span {
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .legend-list .legend-color {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: pink;
+            margin-right: 5px;
+        }
+
+        .legend-list li:hover {
+            background-color: #eee;
+        }
+
+        .configure-chart-btns {
+            width: 45px;
+            height: 100%;
+            background-color: blueviolet;
+        }
+
+        a,
+        a:hover,
+        a:visited {
+            padding: 5px 10px;
+            border: 1px solid #999;
+            text-decoration: none;
+            font-size: 13px;
+            color: #333;
+            line-height: 20px;
+            cursor: pointer;
+        }
+
+        .get-screen {
+            position: fixed;
+            top: 5px;
+            right: 5px;
+            background-color: #fff;
+        }
+
+        svg {
+            stroke: rgb(102, 102, 102);
+            overflow: visible;
+            box-sizing: border-box;
+        }
+
+        svg text {
+            font-size: 12px;
+            fill: purple;
+            stroke: purple;
+            stroke-width: 0;
+        }
+
+        svg tspan {
+            font-size: 60px;
+            fill: purple;
+            stroke: purple;
+            stroke-width: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <a class="get-screen">截取屏幕</a>
+    <main>
+        <div class="chart-container">
+            <div class="chart-title  chart-y-title" style="transform: rotate(-90deg);transform-origin: 50% 50%;">
+                <span>进价···</span>
+            </div>
+            <div class="svgDiv">
+                <svg class="chartSvg" width="870" height="617">
+                    <g class="axis y-axis" transform="translate(80 ,10)">
+                        <g class="y-axis label" transform="translate(0,584)">
+                            <line class="y-line ticks" x1="28" y1="0" x2="603" style="stroke-width: 1; stroke-opacity: 1;"></line>
+                            <text class="text" text-anchor="end" transform="translate(28,3)">0</text>
+                            <text class="text" text-anchor="start" transform="translate(613,3)">0</text>
+                        </g>
+                        <g class="y-axis label" transform="translate(0,438)">
+                            <line class="y-line ticks" x1="28" y1="0" x2="603" style="stroke-width: 0.5; stroke-opacity: 1;"></line>
+                            <text class="text" text-anchor="end" transform="translate(28,3)">5K</text>
+                            <text class="text" text-anchor="start" transform="translate(613,3)">200K</text>
+                        </g>
+                        <g class="y-axis label" transform="translate(0,292)">
+                            <line class="y-line ticks" x1="28" y1="0" x2="603" style="stroke-width: 0.5; stroke-opacity: 1;"></line>
+                            <text class="text" text-anchor="end" transform="translate(28,3)">10K</text>
+                            <text class="text" text-anchor="start" transform="translate(613,3)">400K</text>
+                        </g>
+                        <g class="y-axis label" transform="translate(0,146)">
+                            <line class="y-line ticks" x1="28" y1="0" x2="603" style="stroke-width: 0.5; stroke-opacity: 1;"></line>
+                            <text class="text" text-anchor="end" transform="translate(28,3)">15K</text>
+                            <text class="text" text-anchor="start" transform="translate(613,3)">600K</text>
+                        </g>
+                        <g class="y-axis label" transform="translate(0,0)">
+                            <line class="y-line ticks" x1="28" y1="0" x2="603" style="stroke-width: 0.5; stroke-opacity: 1;"></line>
+                            <text class="text" text-anchor="end" transform="translate(28,3)">20K</text>
+                            <text class="text" text-anchor="start" transform="translate(613,3)">800K</text>
+                        </g>
+                    </g>
+                    <g class="axis x-axis" transform="translate(108 , 594)">
+                        <g class="x-axis label" transform="translate(0,0)">
+                            <text class="text" transform="translate(47.916666666666664,20) " text-anchor="middle">西南<title>西南</title></text>
+                            <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(0,0)"></line>
+                        </g>
+                        <g class="x-axis label" transform="translate(95.83333333333333,0)">
+                            <text class="text" transform="translate(47.916666666666664,20) " text-anchor="middle">西北<title>西北</title></text>
+                            <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(0,0)"></line>
+                        </g>
+                        <g class="x-axis label" transform="translate(191.66666666666666,0)">
+                            <text class="text" transform="translate(47.916666666666664,20) " text-anchor="middle">东北<title>东北</title></text>
+                            <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(0,0)"></line>
+                        </g>
+                        <g class="x-axis label" transform="translate(287.5,0)">
+                            <text class="text" transform="translate(47.916666666666664,20) " text-anchor="middle">华东<title>华东</title></text>
+                            <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(0,0)"></line>
+                        </g>
+                        <g class="x-axis label" transform="translate(383.3333333333333,0)">
+                            <text class="text" transform="translate(47.916666666666664,20) " text-anchor="middle">华北<title>华北</title></text>
+                            <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(0,0)"></line>
+                        </g>
+                        <g class="x-axis label" transform="translate(479.16666666666663,0)">
+                            <text class="text" transform="translate(47.916666666666664,20) " text-anchor="middle">华南<title>华南</title></text>
+                            <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(0,0)"></line>
+                        </g>
+                        <line class="ticks" x0="0" y0="2" x1="0" y1="8" stroke-opacity="0" transform="translate(575,0)"></line>
+                    </g>
+                    <defs>
+                        <clipPath id="clipPath0">
+                            <rect x="108" y="-10" width="870" height="595"></rect>
+                        </clipPath>
+                    </defs>
+                    <g class="chart-detail" clip-path="url(#clipPath0)" transform="translate(0 ,10)">
+                        <g class="chartset" legend="defaultLegend" transform="translate(108 , -23)">
+                            <g class="columns" id="columnChart" style="cursor:pointer;" xLabel="西南" transform="translate(0,607)">
+                                <rect class="bars" z-index="3" color="#37a2da" stroke="none" height="34.03049574927478"
+                                    x="0" y="-34.03049574927478" transform="translate(19.166666666666668,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="165109527438647454621105758045911889424"
+                                    style="fill: rgb(55, 162, 218);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="165109527438647454621105758045911889424" value="1165.4279366189992"
+                                    text-anchor="middle" transform="translate(28.75,-34.03049574927478)" style="fill: inherit; display: none;">1165.43</text>
+                                <rect class="bars" z-index="3" color="#67e0e3" stroke="none" height="2.036919000000005"
+                                    x="0" y="-2.036919000000005" transform="translate(38.33333333333333,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="312137425895135316054486182650650719914"
+                                    style="fill: rgb(103, 224, 227);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="312137425895135316054486182650650719914" value="2790.3000000000065"
+                                    text-anchor="middle" transform="translate(47.916666666666664,-2.036919000000005)"
+                                    style="fill: inherit; display: none;">2790.3</text>
+                                <rect class="bars" z-index="3" color="#ffdb5c" stroke="none" height="47.065111150000014"
+                                    x="0" y="-47.065111150000014" transform="translate(57.5,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="39971455452049477408528439323122414972"
+                                    style="fill: rgb(255, 219, 92);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="39971455452049477408528439323122414972" value="64472.75500000001"
+                                    text-anchor="middle" transform="translate(67.08333333333333,-47.065111150000014)"
+                                    style="fill: inherit; display: none;">64472.76</text>
+                            </g>
+                            <g class="columns" id="columnChart" style="cursor:pointer;" xLabel="西北" transform="translate(95.83333333333333,607)">
+                                <rect class="bars" z-index="3" color="#37a2da" stroke="none" height="74.64973902856042"
+                                    x="0" y="-74.64973902856042" transform="translate(19.166666666666668,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="165109527438647454621105758045911889424"
+                                    style="fill: rgb(55, 162, 218);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="165109527438647454621105758045911889424" value="2556.4979119370005"
+                                    text-anchor="middle" transform="translate(28.75,-74.64973902856042)" style="fill: inherit; display: none;">2556.5</text>
+                                <rect class="bars" z-index="3" color="#67e0e3" stroke="none" height="4.731202999999981"
+                                    x="0" y="-4.731202999999981" transform="translate(38.33333333333333,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="312137425895135316054486182650650719914"
+                                    style="fill: rgb(103, 224, 227);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="312137425895135316054486182650650719914" value="6481.099999999975"
+                                    text-anchor="middle" transform="translate(47.916666666666664,-4.731202999999981)"
+                                    style="fill: inherit; display: none;">6481.1</text>
+                                <rect class="bars" z-index="3" color="#ffdb5c" stroke="none" height="116.38974511" x="0"
+                                    y="-116.38974511" transform="translate(57.5,0)" width="19.166666666666664" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="39971455452049477408528439323122414972" style="fill: rgb(255, 219, 92);"></rect><text
+                                    class="labels show-labels" legend="defaultLegend" legendIndex="0" yAxisId="39971455452049477408528439323122414972"
+                                    value="159438.007" text-anchor="middle" transform="translate(67.08333333333333,-116.38974511)"
+                                    style="fill: inherit; display: none;">159438.01</text>
+                            </g>
+                            <g class="columns" id="columnChart" style="cursor:pointer;" xLabel="东北" transform="translate(191.66666666666666,607)">
+                                <rect class="bars" z-index="3" color="#37a2da" stroke="none" height="132.564922132565"
+                                    x="0" y="-132.564922132565" transform="translate(19.166666666666668,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="165109527438647454621105758045911889424"
+                                    style="fill: rgb(55, 162, 218);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="165109527438647454621105758045911889424" value="4539.8945935809925"
+                                    text-anchor="middle" transform="translate(28.75,-132.564922132565)" style="fill: inherit; display: none;">4539.89</text>
+                                <rect class="bars" z-index="3" color="#67e0e3" stroke="none" height="7.5768159999999405"
+                                    x="0" y="-7.5768159999999405" transform="translate(38.33333333333333,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="312137425895135316054486182650650719914"
+                                    style="fill: rgb(103, 224, 227);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="312137425895135316054486182650650719914" value="10379.199999999919"
+                                    text-anchor="middle" transform="translate(47.916666666666664,-7.5768159999999405)"
+                                    style="fill: inherit; display: none;">10379.2</text>
+                                <rect class="bars" z-index="3" color="#ffdb5c" stroke="none" height="193.67339679000003"
+                                    x="0" y="-193.67339679000003" transform="translate(57.5,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="39971455452049477408528439323122414972"
+                                    style="fill: rgb(255, 219, 92);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="39971455452049477408528439323122414972" value="265306.02300000004"
+                                    text-anchor="middle" transform="translate(67.08333333333333,-193.67339679000003)"
+                                    style="fill: inherit; display: none;">265306.02</text>
+                            </g>
+                            <g class="columns" id="columnChart" style="cursor:pointer;" xLabel="华东" transform="translate(287.5,607)">
+                                <rect class="bars" z-index="3" color="#37a2da" stroke="none" height="170.50386204846072"
+                                    x="0" y="-170.50386204846072" transform="translate(19.166666666666668,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="165109527438647454621105758045911889424"
+                                    style="fill: rgb(55, 162, 218);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="165109527438647454621105758045911889424" value="5839.173357823997"
+                                    text-anchor="middle" transform="translate(28.75,-170.50386204846072)" style="fill: inherit; display: none;">5839.17</text>
+                                <rect class="bars" z-index="3" color="#67e0e3" stroke="none" height="9.972675999999892"
+                                    x="0" y="-9.972675999999892" transform="translate(38.33333333333333,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="312137425895135316054486182650650719914"
+                                    style="fill: rgb(103, 224, 227);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="312137425895135316054486182650650719914" value="13661.199999999852"
+                                    text-anchor="middle" transform="translate(47.916666666666664,-9.972675999999892)"
+                                    style="fill: inherit; display: none;">13661.2</text>
+                                <rect class="bars" z-index="3" color="#ffdb5c" stroke="none" height="235.38671661000012"
+                                    x="0" y="-235.38671661000012" transform="translate(57.5,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="39971455452049477408528439323122414972"
+                                    style="fill: rgb(255, 219, 92);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="39971455452049477408528439323122414972" value="322447.5570000002"
+                                    text-anchor="middle" transform="translate(67.08333333333333,-235.38671661000012)"
+                                    style="fill: inherit; display: none;">322447.56</text>
+                            </g>
+                            <g class="columns" id="columnChart" style="cursor:pointer;" xLabel="华北" transform="translate(383.3333333333333,607)">
+                                <rect class="bars" z-index="3" color="#37a2da" stroke="none" height="189.73925924991923"
+                                    x="0" y="-189.73925924991923" transform="translate(19.166666666666668,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="165109527438647454621105758045911889424"
+                                    style="fill: rgb(55, 162, 218);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="165109527438647454621105758045911889424" value="6497.919837326001"
+                                    text-anchor="middle" transform="translate(28.75,-189.73925924991923)" style="fill: inherit; display: none;">6497.92</text>
+                                <rect class="bars" z-index="3" color="#67e0e3" stroke="none" height="10.981462999999888"
+                                    x="0" y="-10.981462999999888" transform="translate(38.33333333333333,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="312137425895135316054486182650650719914"
+                                    style="fill: rgb(103, 224, 227);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="312137425895135316054486182650650719914" value="15043.099999999846"
+                                    text-anchor="middle" transform="translate(47.916666666666664,-10.981462999999888)"
+                                    style="fill: inherit; display: none;">15043.1</text>
+                                <rect class="bars" z-index="3" color="#ffdb5c" stroke="none" height="265.06788516" x="0"
+                                    y="-265.06788516" transform="translate(57.5,0)" width="19.166666666666664" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="39971455452049477408528439323122414972" style="fill: rgb(255, 219, 92);"></rect><text
+                                    class="labels show-labels" legend="defaultLegend" legendIndex="0" yAxisId="39971455452049477408528439323122414972"
+                                    value="363106.692" text-anchor="middle" transform="translate(67.08333333333333,-265.06788516)"
+                                    style="fill: inherit; display: none;">363106.69</text>
+                            </g>
+                            <g class="columns" id="columnChart" style="cursor:pointer;" xLabel="华南" transform="translate(479.16666666666663,607)">
+                                <rect class="bars" z-index="3" color="#37a2da" stroke="none" height="346.87921632025217"
+                                    x="0" y="-346.87921632025217" transform="translate(19.166666666666668,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="165109527438647454621105758045911889424"
+                                    style="fill: rgb(55, 162, 218);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="165109527438647454621105758045911889424" value="11879.425216446993"
+                                    text-anchor="middle" transform="translate(28.75,-346.87921632025217)" style="fill: inherit; display: none;">11879.43</text>
+                                <rect class="bars" z-index="3" color="#67e0e3" stroke="none" height="20.651554000000413"
+                                    x="0" y="-20.651554000000413" transform="translate(38.33333333333333,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="312137425895135316054486182650650719914"
+                                    style="fill: rgb(103, 224, 227);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="312137425895135316054486182650650719914" value="28289.800000000567"
+                                    text-anchor="middle" transform="translate(47.916666666666664,-20.651554000000413)"
+                                    style="fill: inherit; display: none;">28289.8</text>
+                                <rect class="bars" z-index="3" color="#ffdb5c" stroke="none" height="483.4703560700001"
+                                    x="0" y="-483.4703560700001" transform="translate(57.5,0)" width="19.166666666666664"
+                                    legend="defaultLegend" legendIndex="0" yAxisId="39971455452049477408528439323122414972"
+                                    style="fill: rgb(255, 219, 92);"></rect><text class="labels show-labels" legend="defaultLegend"
+                                    legendIndex="0" yAxisId="39971455452049477408528439323122414972" value="662288.1590000001"
+                                    text-anchor="middle" transform="translate(67.08333333333333,-483.4703560700001)"
+                                    style="fill: inherit; display: none;">662288.16</text>
+                            </g>
+                        </g>
+                    </g>
+                </svg>
+            </div>
+            <div class="chart-title  chart-y-title" style="transform: rotate(90deg);transform-origin: 50% 50%;">
+                <span>售价···</span>
+            </div>
+            <div class="chart-title  chart-x-title">
+                <span>商品···</span>
+            </div>
+        </div>
+        <ul class="legend-list">
+            <li>
+                <span class="legend-color"></span>
+                <span>进价</span>
+            </li>
+            <li>
+                <span class="legend-color"></span>
+                <span>售价</span>
+            </li>
+        </ul>
+        <div class="configure-chart-btns"></div>
+    </main>
+</body>
+
+<!-- JQuery -->
+<script src="./jquery-1.9.1.min.js"></script>
+<!-- D3 -->
+<script src="./d3.v3.min.js"></script>
+<!-- Required to convert named colors to RGB -->
+<script src="./rgbcolor.min.js"></script>
+<!-- Optional if you want blur -->
+<script src="./stackblur.min.js"></script>
+<!-- Main canvg code -->
+<script src="./canvg.min.js"></script>
+<!-- html2canvas -->
+<script src="./html2canvas.min.js"></script>
+<!-- jspdf -->
+<script src="./jspdf.min.js"></script>
+
+<script>
+    // drawChart();
+
+    $(".get-screen")
+        .on("click", function (e) {
+            var chartContainer = $("main"), width = chartContainer.width(), height = chartContainer.height(),
+                svg = chartContainer.find("svg"), svgText = chartContainer.find("text");
+            svg.each(function (i, e) {
+                var self = $(e),
+                    padding = self.css("padding"),
+                    margin = self.css("margin"),
+                    stroke = self.css("stroke"),
+                    overflow = self.css("overflow"),
+                    boxSizing = self.css("box-sizing");
+                self.css({
+                    "padding": padding,
+                    "margin": margin,
+                    "stroke": stroke,
+                    "overflow": overflow,
+                    "box-sizing": boxSizing
+                });
+            });
+            svgText.each(function (i, e) {
+                var self = $(e),
+                    fontFamily = self.css("font-family"),
+                    fontSize = self.css("font-size"),
+                    fontWeight = self.css("font-weight"),
+                    fill = self.css("fill"),
+                    stroke = self.css("stroke"),
+                    strokeWidth = self.css("stroke-width"),
+                    textAnchor = self.css("text-anchor");
+                self.css({
+                    "font-family": fontFamily,
+                    "font-size": fontSize,
+                    "font-weight": fontWeight,
+                    "fill": fill,
+                    "stroke": stroke,
+                    "stroke-width": strokeWidth,
+                    "text-anchor": textAnchor
+                });
+            });
+            var copyDom = chartContainer.clone();
+            copyDom.width(width + "px");
+            copyDom.height(height + "px");
+            svg2canvas(copyDom);
+            html2canvas(chartContainer[0], {
+                dpi: window.devicePixelRatio * 3,
+                height: height,
+                width: width
+            }).then(function (canvas) {
+                saveCanvAs(canvas);
+                copyDom.remove();
+            });
+        });
+
+    /**
+    * @param canvas canvas对象
+    * @param type 保存类型，默认为png，可选pdf，jpg，jpeg，bmp
+    * */
+    function saveCanvAs(canvas, name, type = "png") {
+        var type = type.toLowerCase();
+        if (type === "pdf") {
+            var imgData = canvas.toDataURL("image/png"), img = new Image();
+            img.src = imgData;
+            img.onload = function () {
+                // 此处需要注意，pdf横置和竖置两个属性，需要根据宽高的比例来调整，不然会出现显示不完全的问题
+                // 根据图片的尺寸设置pdf的规格，要在图片加载成功时执行，之所以要*0.225是因为比例问题
+                if (this.width > this.height) {
+                    var doc = new jsPDF("l", "mm", [this.width * 0.225, this.height * 0.225]);
+                } else {
+                    var doc = new jsPDF("p", "mm", [this.width * 0.225, this.height * 0.225]);
+                }
+                doc.addImage(imgData, "jpg", 0, 0, this.width * 0.225, this.height * 0.225);
+                doc.save(name || "pdf_" + new Date().getTime() + ".pdf");
+            }
+        } else {
+            if (type !== "png" && type !== "jpg" && type !== "jpeg" && type !== "bmp") {
+                type = "png";
+                console.log("Type error, saved as PNG by default!");
+            }
+            var imgData = canvas.toDataURL("image/" + type + ""), oA = document.createElement("a");
+            oA.download = name || type + "_" + new Date().getTime() + "." + type;
+            oA.href = imgData;
+            document.body.appendChild(oA);
+            oA.click();
+            oA.remove();
+        }
+    }
+
+    /**
+    * @param targetElem 截图区域
+    * */
+    function svg2canvas(targetElem) {
+        var svgElem = targetElem.find('svg');
+        svgElem.each(function (index, node) {
+            var self = $(this), canvas = document.createElement('canvas');
+            self.wrap("<div></div>");
+            var containerParent = self.parent();
+            canvg(canvas, self.parent().html());
+            containerParent.append(canvas);
+        });
+    }
+
+    // 把元素的样式全部转为行内样式
+    function toInlineStyle(node) {
+        var style = node.currentStyle ? node.currentStyle : getComputedStyle(node);
+        for (var k in style) {
+            if (isNaN(k) && k != 'cssText') {
+                if (style[k] == '0px' || style[k] == 'none' || style[k] == 'normal' || style[k] == 'auto' || !style[k]) {
+                    delete node.style[k]
+                } else {
+                    node.style[k] = style[k];
+                }
+            }
+        }
+    }
+</script>
+
+</html>

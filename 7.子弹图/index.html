@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<style>
+    body {
+        font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+        margin: auto;
+        padding-top: 40px;
+        position: relative;
+        width: 960px;
+    }
+
+    button {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+
+    .bullet {
+        font: 10px sans-serif;
+    }
+    .bullet .marker {
+        stroke: #000;
+        stroke-width: 2px;
+    }
+    .bullet .tick line {
+        stroke: #666;
+        stroke-width: 0.5px;
+    }
+    .bullet .range.s0 {
+        fill: #eee;
+    }
+    .bullet .range.s1 {
+        fill: #ddd;
+    }
+    .bullet .range.s2 {
+        fill: #ccc;
+    }
+    .bullet .measure.s0 {
+        fill: lightsteelblue;
+    }
+    .bullet .measure.s1 {
+        fill: steelblue;
+    }
+    .bullet .title {
+        font-size: 14px;
+        font-weight: bold;
+    }
+    .bullet .subtitle {
+        fill: #999;
+    }
+</style>
+<button>Update</button>
+<script src="https://cdn.bootcss.com/d3/3.2.8/d3.min.js"></script>
+<script src="bullet.js"></script>
+<script>
+    // 定义margin属性以及子弹图的宽、高尺寸；
+    var margin = { top: 0, right: 0, bottom: 0, left: 0 },
+        width = 960,
+        height = 25;
+
+    var chart = d3
+        .bullet() // 初始化一个子弹图对象
+        .width(width) // 设置子弹图的宽度
+        .height(height) // 设置子弹图的高度
+        .orient("left");
+
+    var data = [
+        {
+            markers: [1319.7000000000003],
+            measures: [526.3162012149999],
+            ranges: [
+                395.9100000000001,
+                791.8200000000002,
+                1055.7600000000002,
+                1583.6400000000003
+            ],
+            subtitle: "RamHsu",
+            title: "EMS"
+        },
+        {
+            title: "Profit",
+            subtitle: "%",
+            ranges: [0, 20, 25, 30],
+            measures: [21, 23],
+            markers: [26]
+        },
+        {
+            title: "Order Size",
+            subtitle: "US$, average",
+            ranges: [0, 350, 500, 600],
+            measures: [100, 320],
+            markers: [550]
+        },
+        {
+            title: "New Customers",
+            subtitle: "count",
+            ranges: [0, 1400, 2000, 2500],
+            measures: [1000, 1650],
+            markers: [2100]
+        },
+        {
+            title: "Satisfaction",
+            subtitle: "out of 5",
+            ranges: [0, 3.5, 4.25, 5],
+            measures: [3.2, 4.7],
+            markers: [4.4]
+        }
+    ];
+
+    var svg = d3
+        .select("body")
+        .append("svg")
+        .attr("width", width + 160)
+        .attr("height", 600);
+
+    var bullet = svg
+        .selectAll("g")
+        .data(data)
+        .enter()
+        .append("g")
+        .attr("class", "bullet")
+        .append("g")
+        .attr("transform", function(d, i) {
+            return ( "translate(" + (margin.left + 120) + "," + (margin.top + (height + 25) * i) + ")" );
+        })
+        .call(chart); // 将生成的svg作为chart函数对象的参数，调用bullet.js中的bullet(g)函数进行一系列操作，生成子弹图
+
+    var title = bullet
+        .append("g")
+        .style("text-anchor", "end") // 设置子弹图文字标签的位置在文字基点的左上方
+        .attr("transform", "translate(-6," + height / 2 + ")"); // 定义文字的变换矩阵
+
+    title
+        .append("text") // 定义文字的内容
+        .attr("class", "title")
+        .text(function(d) {
+            return d.title;
+        });
+
+    title
+        .append("text") // 定义子标题的内容
+        .attr("class", "subtitle")
+        .attr("dy", "1em")
+        .text(function(d) {
+            return d.subtitle;
+        });
+
+    // 随机变换数据，进行子弹图更新，并且定义过渡时间为1000毫秒
+    d3.selectAll("button").on("click", function() {
+        bullet.datum(randomize).call(chart.duration(1000)); // TODO automatic transition
+    });
+
+    window.onresize = function() {
+        bullet.datum(randomize).call(chart.duration(1000));
+    };
+
+    // 更新子弹图的ranges、markers以及measures数据
+    function randomize(d) {
+        if (!d.randomizer) d.randomizer = randomizer(d);
+        d.ranges = d.ranges.map(d.randomizer);
+        d.markers = d.markers.map(d.randomizer);
+        d.measures = d.measures.map(d.randomizer);
+        return d;
+    }
+
+    // 随机变换子弹图数据的方法
+    function randomizer(d) {
+        var k = d3.max(d.ranges) * 0.2;
+        return function(d) {
+            return Math.max(0, d + k * (Math.random() - 0.5));
+        };
+    }
+</script>

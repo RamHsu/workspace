@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>BOM对象</title>
+</head>
+
+<body>
+</body>
+
+<script>
+    // js中的BOM对象
+
+    console.log(top); // 对象始终指向最外围的框架，也就是整个浏览器窗口
+    console.log(parent); // 对象表示包含当前框架的框架
+    console.log(self); // self 对象则回指 window
+
+    console.log(navigator.userAgent);
+
+    // alert('提示信息')
+    // confirm("确认信息")
+    // prompt("弹出输入框")
+    // open("https://www.baidu.com/"); // 打开新窗口
+    // close();  // 关闭当前的网页
+
+    var timer = setTimeout(function () {
+        console.log();
+    }, 1000);
+
+    var interval = setInterval(function () {
+        console.log(new Date().toLocaleString());
+    }, 1000);
+
+    clearTimeout(timer);
+    clearInterval(interval);
+
+    console.log(location); //  使用 location 对象可以通过编程方式来访问浏览器的导航系统。设置相应的属性，可以逐段或整体性地修改浏览器的 URL
+    // location.replace("https://www.baidu.com/"); // 调用 replace() 方法可以导航到一个新 URL，同时该 URL 会替换浏览器历史记录中当前显示的页面
+
+    console.log(screen);
+    console.log(history);
+
+    var arr = [{ id: 1 }, { id: 3 }, { id: 2 }].sort(function (a, b) {
+        return a.id > b.id;
+    });
+    console.log(arr);
+</script>
+
+</html>

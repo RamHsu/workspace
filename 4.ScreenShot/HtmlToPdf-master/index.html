@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HtmlToPdf</title>
+    <link rel="stylesheet" href="./css/index.css" />
+
+    <script type="text/javascript" src="./js/rgbcolor.min.js"></script>
+    <script type="text/javascript" src="./js/stackblur.min.js"></script>
+    <script type="text/javascript" src="./js/canvg2.js"></script>
+    <script type="text/javascript" src="./js/html2canvas-0.4.1.js"></script>
+    <script type="text/javascript" src="./js/jspdf.min.js"></script>
+    <script type="text/javascript" src="./js/jquery-2.1.4.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <input id="downloadPdf" type="button" value="Download PDF" />
+    </div>
+    <div id="pdfContainer" class="container">
+        <div>点击上面的按钮，蓝色框区域内的内容将会被导出为pdf.</div>
+        <svg class="relationship-chart" width="100%" height="688" style="cursor: move; font-size: 13px;">
+            <marker id="normal" markerUnits="userSpaceOnUse" refX="10" refY="5" markerWidth="10" markerHeight="10"
+                orient="auto" stroke-width="1.5">
+                <path class="r-marker-n" d="M10,5 L0,0 L0,10" fill="#ddd" fill-opacity="1"></path>
+            </marker>
+            <marker id="special" markerUnits="userSpaceOnUse" refX="10" refY="5" markerWidth="10" markerHeight="10"
+                orient="auto" stroke-width="1.5">
+                <path class="r-marker-s" d="M10,5 L0,0 L0,10" fill="#f00"></path>
+            </marker>
+            <g class="relations-container">
+                <g class="r-link" relation-id="20" source-tid="4" target-tid="7" transform="translate(0, -350)" style="cursor: pointer;">
+                    <path stroke="#ddd" stroke-width="1px" fill="none" d="M215,920 215,1200" marker-end="url(#normal)"
+                        stroke-opacity="1"></path><text x="215" y="1060" dy="0.35em" transform="rotate(-90,215,1060)translate(0,-7)"
+                        text-anchor="middle" fill="#ddd" fill-opacity="1" style="font-size: 12px;">DG</text>
+                </g>
+                <g class="r-link" relation-id="6" source-tid="1" target-tid="4" transform="translate(0, -350)" style="cursor: pointer;">
+                    <path stroke="#ddd" stroke-width="1px" fill="none" d="M430,520 215,800" marker-end="url(#normal)"
+                        stroke-opacity="1"></path><text x="322.5" y="660" dy="0.35em" transform="rotate(-52,322.5,660)translate(0,-7)"
+                        text-anchor="middle" fill="#ddd" fill-opacity="1" style="font-size: 12px;">AD</text>
+                </g>
+                <g class="r-link" relation-id="18" source-tid="1" target-tid="6" transform="translate(0, -350)" style="cursor: pointer;">
+                    <path stroke="#ddd" stroke-width="1px" fill="none" d="M430,520 645,800" marker-end="url(#normal)"
+                        stroke-opacity="1"></path><text x="537.5" y="660" dy="0.35em" transform="rotate(52,537.5,660)translate(0,-7)"
+                        text-anchor="middle" fill="#ddd" fill-opacity="1" style="font-size: 12px;">AF</text>
+                </g>
+                <g class="r-link" relation-id="24" source-tid="5" target-tid="6" transform="translate(0, -350)" style="cursor: pointer;">
+                    <path stroke="#ddd" stroke-width="1px" fill="none" d="M1075,920 Q897.5,1040 720,860" marker-end="url(#normal)"
+                        stroke-opacity="1"></path><text x="897.5" y="980" dy="0.35em" transform="rotate(10,897.5,980)translate(0,3)"
+                        text-anchor="middle" fill="#ddd" fill-opacity="1" style="font-size: 12px;">EF</text>
+                </g>
+                <g class="r-link" relation-id="17" source-tid="2" target-tid="5" transform="translate(0, -350)" style="cursor: pointer;">
+                    <path stroke="#ddd" stroke-width="1px" fill="none" d="M1075,480 1075,800" marker-end="url(#normal)"
+                        stroke-opacity="1"></path><text x="1075" y="640" dy="0.35em" transform="rotate(-90,1075,640)translate(0,-7)"
+                        text-anchor="middle" fill="#ddd" fill-opacity="1" style="font-size: 12px;">BE</text>
+                </g>
+                <g class="r-link" relation-id="22" source-tid="8" target-tid="7" transform="translate(0, -350)" style="cursor: pointer;">
+                    <path stroke="#ddd" stroke-width="1px" fill="none" d="M1505,880 215,1200" marker-end="url(#normal)"
+                        stroke-opacity="1"></path><text x="860" y="1040" dy="0.35em" transform="rotate(-14,860,1040)translate(0,-7)"
+                        text-anchor="middle" fill="#ddd" fill-opacity="1" style="font-size: 12px;">HG</text>
+                </g>
+                <g class="r-link" relation-id="21" source-tid="3" target-tid="8" transform="translate(0, -350)" style="cursor: pointer;">
+                    <path stroke="#ddd" stroke-width="1px" fill="none" d="M1505,480 1505,800" marker-end="url(#normal)"
+                        stroke-opacity="1"></path><text x="1505" y="640" dy="0.35em" transform="rotate(-90,1505,640)translate(0,-7)"
+                        text-anchor="middle" fill="#ddd" fill-opacity="1" style="font-size: 12px;">CH</text>
+                </g>
+                <g class="r-tables" transform="translate(967.5,-350)" style="cursor: pointer;"></g>
+                <g class="r-tables" source-tid="" target-tid="1" transform="translate(430,50)" style="cursor: pointer;">
+                    <g class="r-bg">
+                        <rect fill="#fff" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="120"></rect>
+                    </g>
+                    <g class="r-title" relation-id="6,18">
+                        <rect fill="#eee" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="40"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="font-size: 14px; font-weight: 700;">A电商销售数据</text>
+                    </g>
+                    <g class="r-columns" column-id="9" relation-id="6" transform="translate(0 , 40)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#37a2da" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">目的城市</text>
+                    </g>
+                    <g class="r-columns" column-id="12" relation-id="18" transform="translate(0 , 80)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#ffdb5c" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">产品类别</text>
+                    </g>
+                </g>
+                <g class="r-tables" source-tid="1" target-tid="4" transform="translate(215,450)" style="cursor: pointer;">
+                    <g class="r-bg">
+                        <rect fill="#fff" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="120"></rect>
+                    </g>
+                    <g class="r-title" relation-id="6,20">
+                        <rect fill="#eee" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="40"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="font-size: 14px; font-weight: 700;">D全国各地经纬度</text>
+                    </g>
+                    <g class="r-columns" column-id="33" relation-id="6" transform="translate(0 , 40)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#37a2da" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">地市</text>
+                    </g>
+                    <g class="r-columns" column-id="37" relation-id="20" transform="translate(0 , 80)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#67e0e3" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">人口</text>
+                    </g>
+                </g>
+                <g class="r-tables" source-tid="4" target-tid="7" transform="translate(215,850)" style="cursor: pointer;">
+                    <g class="r-bg">
+                        <rect fill="#fff" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="120"></rect>
+                    </g>
+                    <g class="r-title" relation-id="20,22">
+                        <rect fill="#eee" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="40"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="font-size: 14px; font-weight: 700;">G各个地区的销售数据</text>
+                    </g>
+                    <g class="r-columns" column-id="68" relation-id="20" transform="translate(0 , 40)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#67e0e3" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">成本</text>
+                    </g>
+                    <g class="r-columns" column-id="70" relation-id="22" transform="translate(0 , 80)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#ea6a6a" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">利润</text>
+                    </g>
+                </g>
+                <g class="r-tables" source-tid="1" target-tid="6" transform="translate(645,450)" style="cursor: pointer;">
+                    <g class="r-bg">
+                        <rect fill="#fff" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="120"></rect>
+                    </g>
+                    <g class="r-title" relation-id="18,24">
+                        <rect fill="#eee" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="40"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="font-size: 14px; font-weight: 700;">F北京二手房</text>
+                    </g>
+                    <g class="r-columns" column-id="56" relation-id="18" transform="translate(0 , 40)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#ffdb5c" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">楼层</text>
+                    </g>
+                    <g class="r-columns" column-id="63" relation-id="24" transform="translate(0 , 80)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#e062ae" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">区域名称</text>
+                    </g>
+                </g>
+                <g class="r-tables" source-tid="" target-tid="2" transform="translate(1075,50)" style="cursor: pointer;">
+                    <g class="r-bg">
+                        <rect fill="#fff" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="80"></rect>
+                    </g>
+                    <g class="r-title" relation-id="17">
+                        <rect fill="#eee" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="40"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="font-size: 14px; font-weight: 700;">B书院成绩</text>
+                    </g>
+                    <g class="r-columns" column-id="20" relation-id="17" transform="translate(0 , 40)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#ff9f7f" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">称号</text>
+                    </g>
+                </g>
+                <g class="r-tables" source-tid="2" target-tid="5" transform="translate(1075,450)" style="cursor: pointer;">
+                    <g class="r-bg">
+                        <rect fill="#fff" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="120"></rect>
+                    </g>
+                    <g class="r-title" relation-id="17,24">
+                        <rect fill="#eee" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="40"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="font-size: 14px; font-weight: 700;">E销售</text>
+                    </g>
+                    <g class="r-columns" column-id="41" relation-id="17" transform="translate(0 , 40)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#ff9f7f" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">店名</text>
+                    </g>
+                    <g class="r-columns" column-id="40" relation-id="24" transform="translate(0 , 80)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#e062ae" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">品类</text>
+                    </g>
+                </g>
+                <g class="r-tables" source-tid="" target-tid="3" transform="translate(1505,50)" style="cursor: pointer;">
+                    <g class="r-bg">
+                        <rect fill="#fff" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="80"></rect>
+                    </g>
+                    <g class="r-title" relation-id="21">
+                        <rect fill="#eee" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="40"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="font-size: 14px; font-weight: 700;">C各城市供销状况</text>
+                    </g>
+                    <g class="r-columns" column-id="31" relation-id="21" transform="translate(0 , 40)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#ea6a6a" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">销量</text>
+                    </g>
+                </g>
+                <g class="r-tables" source-tid="3" target-tid="8" transform="translate(1505,450)" style="cursor: pointer;">
+                    <g class="r-bg">
+                        <rect fill="#fff" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="80"></rect>
+                    </g>
+                    <g class="r-title" relation-id="21,22">
+                        <rect fill="#eee" stroke="none" stroke-width="1px" y="0" x="-75" width="150" height="40"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="font-size: 14px; font-weight: 700;">H主机状态表</text>
+                    </g>
+                    <g class="r-columns" column-id="73" relation-id="21,22" transform="translate(0 , 40)" style="fill: rgb(255, 255, 255);">
+                        <rect fill="#ea6a6a" stroke="none" y="0" x="-75" width="150" height="40" style="fill-opacity: 0.1;"></rect><text
+                            dx="10px" dy="10px" transform="translate(-75, 15)" text-anchor="strat" style="fill: rgb(51, 51, 51);">device_id</text>
+                    </g>
+                </g>
+            </g>
+        </svg>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#downloadPdf").click(function () {
+                var targetDom = $("#pdfContainer");
+                // 把需要导出的pdf内容clone一份，这样对它进行转换、微调等操作时才不会影响原来界面
+                var copyDom = targetDom.clone();
+                // 新的div宽高跟原来一样，高度设置成自适应，这样才能完整显示节点中的所有内容（比如说表格滚动条中的内容）
+                copyDom.width(targetDom.width() + "px");
+                copyDom.height(targetDom.height() + "px");
+
+                $('body').append(copyDom);// ps:这里一定要先把copyDom append到body下，然后再进行后续的glyphicons2canvas处理，不然会导致图标为空
+
+                svg2canvas(copyDom);
+
+                html2canvas(copyDom, {
+                    onrendered: function (canvas) {
+                        var imgData = canvas.toDataURL('image/jpeg');
+                        var img = new Image();
+                        img.src = imgData;
+                        // 根据图片的尺寸设置pdf的规格，要在图片加载成功时执行，之所以要*0.225是因为比例问题
+                        img.onload = function () {
+                            // 此处需要注意，pdf横置和竖置两个属性，需要根据宽高的比例来调整，不然会出现显示不完全的问题
+                            if (this.width > this.height) {
+                                var doc = new jsPDF('l', 'mm', [this.width * 0.225, this.height * 0.225]);
+                            } else {
+                                var doc = new jsPDF('p', 'mm', [this.width * 0.225, this.height * 0.225]);
+                            }
+                            doc.addImage(imgData, 'jpeg', 0, 0, this.width * 0.225, this.height * 0.225);
+                            // 根据下载保存成不同的文件名
+                            doc.save('pdf_' + new Date().getTime() + '.pdf');
+                        };
+                        // 删除复制出来的div
+                        copyDom.remove();
+                    },
+                    background: "#fff",// 这里给生成的图片默认背景，不然的话，如果你的html根节点没设置背景的话，会用黑色填充。
+                    allowTaint: true // 避免一些不识别的图片干扰，默认为false，遇到不识别的图片干扰则会停止处理html2canvas
+                });
+            });
+        });
+
+        function svg2canvas(targetElem) {
+            var svgElem = targetElem.find('svg');
+            svgElem.each(function (index, node) {
+                var parentNode = node.parentNode;
+                // 由于现在的IE不支持直接对svg标签node取内容，所以需要在当前标签外面套一层div，通过外层div的innerHTML属性来获取
+                var tempNode = document.createElement('div');
+                tempNode.appendChild(node);
+                var svg = tempNode.innerHTML;
+                var canvas = document.createElement('canvas');
+                // 转换
+                canvg(canvas, svg);
+                parentNode.appendChild(canvas);
+            });
+        }
+
+        function glyphicons2canvas(targetElem, fontClassName, fontFamilyName) {
+            var iconElems = targetElem.find('.' + fontClassName);
+            iconElems.each(function (index, inconNode) {
+                var fontSize = $(inconNode).css("font-size");
+                var iconColor = $(inconNode).css("color");
+                var styleContent = $(inconNode).attr('style');
+                // 去掉"px"
+                fontSize = fontSize.replace("px", "");
+                var charCode = getCharCodeByGlyphiconsName(iconName);
+                var myCanvas = document.createElement('canvas');
+                // 把canva宽高各增加2是为了显示图标完整
+                myCanvas.width = parseInt(fontSize) + 2;
+                myCanvas.height = parseInt(fontSize) + 2;
+                myCanvas.style = styleContent;
+                var ctx = myCanvas.getContext('2d');
+                // 设置绘图内容的颜色
+                ctx.fillStyle = iconColor;
+                // 设置绘图的字体大小以及font-family的名字
+                ctx.font = fontSize + 'px ' + fontFamilyName;
+                ctx.fillText(String.fromCharCode(charCode), 1, parseInt(fontSize) + 1);
+                $(inconNode).replaceWith(myCanvas);
+            });
+        }
+
+        // 根据glyphicons/glyphicon图标的类名获取到对应的char code
+        function getCharCodeByGlyphiconsName(iconName) {
+            switch (iconName) {
+                case ("glyphicons-resize-full"):
+                    return "0xE216";
+                case ("glyphicons-chevron-left"):
+                    return "0xE225";
+                default:
+                    return "";
+            }
+        }
+    </script>
+
+
+</body>
+
+</html>
