@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+
+<script>
+    // 冒泡排序
+    function bubbleSort(arr) {
+        let len = arr.length;
+        for (let i = 0; i < len; i++) {
+            for (let j = 1; j < len - i; j++) {
+                if (arr[j - 1] > arr[j]) {
+                    let temp = arr[j];
+                    arr[j] = arr[j - 1];
+                    arr[j - 1] = temp;
+                }
+            }
+        }
+        return arr;
+    }
+    console.log(bubbleSort([7, 2, 1, 4, 3, 0, 1, 5]));
+
+
+    // 插入排序
+    function insertionSort(arr) {
+        let len = arr.length;
+        let preIndex, current;
+        for (let i = 1; i < len; i++) {
+            preIndex = i - 1;
+            current = arr[i];
+            while (preIndex >= 0 && arr[preIndex] > current) {
+                arr[preIndex + 1] = arr[preIndex];
+                preIndex--;
+            }
+            arr[preIndex + 1] = current;
+        }
+        return arr;
+    }
+    console.log(insertionSort([7, 2, 1, 4, 3, 0, 1, 5]));
+</script>
