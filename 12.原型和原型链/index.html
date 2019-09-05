@@ -36,7 +36,7 @@
         console.log("My name is " + this.name + ", I am " + this.age + " years old.");
     }
 
-    var p = new Person("Sam", 24);
+    // var p = new Person("Sam", 24);
 
     function Student(name, age, major) {
         Person.call(this, name, age);
@@ -47,18 +47,20 @@
     }
 
     // 类的继承
+    // Student.prototype = Object.create(p); // 这一步会造成Student实例中的constructor的丢失
     Student.prototype = Object.create(Person.prototype); // 这一步会造成Student实例中的constructor的丢失
 
     // 重新指定constructor
     Student.prototype.constructor = Student; // 恢复Student实例中的constructor的丢失
 
-    console.log(Student.prototype.constructor === Student);
+    // console.log(Student.prototype.constructor === Student);
 
-    var s = new Student("Ram Hsu", 25,"Web");
+    var s = new Student("Ram Hsu", 25, "Web");
     // console.log(s);
 
-    console.log(s.__proto__);
-    
+    // console.log(s.__proto__);
+    // console.log(s.__proto__.__proto__);
+
     // s.say();
     // s.sayMore();
     // console.log(s instanceof Student); // true
