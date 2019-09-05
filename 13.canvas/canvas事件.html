@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <style>
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+            }
+            .chart-container {
+                position: absolute;
+                top: 50px;
+                right: 50px;
+                bottom: 50px;
+                left: 50px;
+                background-color: #eee;
+            }
+            .chart-container canvas {
+                min-width: 100%;
+                min-height: 100%;
+                max-width: 100%;
+                max-height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="chart-container">
+            <canvas></canvas>
+        </div>
+    </body>
+    <script src="https://cdn.bootcss.com/d3/5.9.2/d3.js"></script>
+    <script>
+        var chartContainer = document.querySelector(".chart-container");
+        var canvas = chartContainer.querySelector("canvas");
+        canvas.setAttribute("width", chartContainer.offsetWidth);
+        canvas.setAttribute("height", chartContainer.offsetHeight);
+
+        var data = [
+            {
+                name: "东北",
+                value: [
+                    { name: "办公用品", value: 100 },
+                    { name: "家具", value: 56 },
+                    { name: "技术", value: 60 },
+                    { name: "萝卜", value: 56 },
+                    { name: "白菜", value: 70 },
+                    { name: "西瓜", value: 80 },
+                    { name: "豆腐", value: 72 }
+                ]
+            },
+            {
+                name: "华北",
+                value: [
+                    { name: "办公用品", value: 82 },
+                    { name: "家具", value: 80 },
+                    { name: "技术", value: 96 },
+                    { name: "萝卜", value: 73 },
+                    { name: "白菜", value: 72 },
+                    { name: "西瓜", value: 83 },
+                    { name: "豆腐", value: 86 }
+                ]
+            },
+            {
+                name: "西南",
+                value: [
+                    { name: "办公用品", value: 73 },
+                    { name: "家具", value: 94 },
+                    { name: "技术", value: 80 },
+                    { name: "萝卜", value: 94 },
+                    { name: "白菜", value: 60 },
+                    { name: "西瓜", value: 70 },
+                    { name: "豆腐", value: 68 }
+                ]
+            }
+        ];
+
+        function draw(canvas, data) {
+            var colors = function(i) {
+                var colors = ["red", "orange", "purple"];
+                return colors[i % colors.length];
+            };
+            var ctx = canvas.getContext("2d");
+            var margin = { top: 25, right: 20, bottom: 45, left: 40 };
+            var width = canvas.width - margin.left - margin.right;
+            var height = canvas.height - margin.top - margin.bottom;
+            var radius = 5;
+
+            // 比例尺
+            var xAxis = d3
+                .scaleBand()
+                .domain(data[0].value.map(function(d) {
+                    return d.name;
+                }))
+                .rangeRound([0, width])
+                .padding(0.5);
+            var yAxis = d3
+                .scaleLinear()
+                .domain([0, d3.max(data, function(d0) {
+                    return d3.max(d0.value, function(d1) {
+                        return d1.value;
+                    });
+                })])
+                .range([height, 0]);
+            
+            // 图形区域平移
+            ctx.translate(margin.left, margin.top);
+            
+            // X轴
+            ctx.beginPath();
+            ctx.strokeStyle = "#999";
+            ctx.lineWidth = 1;
+            ctx.fillStyle = "#999";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "top";
+            xAxis.domain().forEach(function(d) {
+                ctx.moveTo(xAxis(d) + xAxis.bandwidth() / 2, height);
+                ctx.lineTo(xAxis(d) + xAxis.bandwidth() / 2, 0);
+                ctx.fillText(d, xAxis(d) + xAxis.bandwidth() / 2, height + 23);
+            });
+            ctx.stroke();
+                
+            // Y轴
+            var yTicks = yAxis.ticks(10);
+            ctx.beginPath();
+            yTicks.forEach(function(d) {
+                ctx.moveTo(0, yAxis(d));
+                ctx.lineTo(width, yAxis(d));
+            });
+            ctx.stroke();
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            yTicks.forEach(function(d) {
+                ctx.fillText(d, -5, yAxis(d));
+            });
+
+
+            // 画折线
+            var canvasElements = [];
+            data.forEach(function(d0, i0) {
+                var points = [];
+                var color = colors(i0);
+                ctx.strokeStyle = color;
+                ctx.fillStyle = color;
+                ctx.globalAlpha = 1;
+                ctx.beginPath();
+
+                d0.value.forEach(function(d1, i1) {
+                    var x = xAxis(d1.name) + xAxis.bandwidth() / 2;
+                    var y = yAxis(d1.value);
+                    if (i1 === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                    points.push({x, y});
+                });
+                ctx.stroke();
+            
+                points.forEach(function(point) {
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, radius, 0, Math.PI*2);
+                    ctx.globalAlpha = 0.5;
+                    ctx.fill();
+                    ctx.stroke();
+                });
+
+                canvasElements.push(points);
+            });
+
+            canvas.removeEventListener("mousemove", null);
+            canvas.addEventListener("mousemove", function(e) {
+                var event = e || window.event;
+                var clientRect = canvas.getBoundingClientRect();
+                var mouseX = event.clientX - clientRect.left;
+                var mouseY = event.clientY - clientRect.top;
+                var curPoints = null;
+                canvas.style.cursor = "default";
+
+                for (var i = canvasElements.length - 1; i >= 0; i--) {
+                    var points = canvasElements[i];
+
+                    for (var j = points.length - 1; j >= 0; j--) {
+                        var point = points[j];
+                        ctx.beginPath();
+                        ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
+                        if (ctx.isPointInPath(mouseX, mouseY)) {
+                            curPoints = [i, j];
+                        }
+                    }
+
+                    /* if (curPoints === null) {
+                        ctx.beginPath();
+                        for (var j = 0; j < points.length; j++) {
+                            var point = points[j];
+                            if (j === 0) {
+                                ctx.moveTo(point.x, point.y);
+                            } else {
+                                ctx.lineTo(point.x, point.y);
+                            }
+                        }
+                        
+                        if (ctx.isPointInPath(mouseX, mouseY)) {
+                            curPoints = [i];
+                        }
+                    } */
+
+                    if (curPoints !== null) {
+                        canvas.style.cursor = "pointer";
+                        break;
+                    }
+                }
+                
+                canvasElements.forEach(function(points, index0) {
+                    var color = colors(index0);
+                    if (curPoints !== null && index0 !== curPoints[0]) {
+                        color = "#ddd";
+                    }
+                    ctx.strokeStyle = color;
+                    ctx.fillStyle = color;
+                    
+                    ctx.beginPath();
+                    points.forEach(function(point, index1) {
+                        if (index1 === 0) {
+                            ctx.moveTo(point.x, point.y);
+                        } else {
+                            ctx.lineTo(point.x, point.y);
+                        }
+                    });
+                    ctx.stroke();
+
+                    points.forEach(function(point) {
+                        ctx.beginPath();
+                        ctx.arc(point.x, point.y, radius, 0, Math.PI*2);
+                        ctx.globalAlpha = 0.5;
+                        ctx.fill();
+                        ctx.stroke();
+                    });
+                });
+
+            });
+        }
+
+        draw(canvas, data)
+</script>
+</html>

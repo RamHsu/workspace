@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <style>
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+            }
+            .chart-container {
+                position: absolute;
+                top: 50px;
+                right: 50px;
+                bottom: 50px;
+                left: 50px;
+                background-color: #eee;
+            }
+            .chart-container canvas {
+                min-width: 100%;
+                min-height: 100%;
+                max-width: 100%;
+                max-height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="chart-container">
+            <canvas></canvas>
+        </div>
+    </body>
+    <script src="https://cdn.bootcss.com/d3/5.9.2/d3.js"></script>
+    <script>
+        var chartContainer = document.querySelector(".chart-container");
+        var canvas = chartContainer.querySelector("canvas");
+
+        canvas.width = chartContainer.offsetWidth;
+        canvas.height = chartContainer.offsetHeight;
+
+        var margin = { top: 25, right: 20, bottom: 45, left: 40 };
+        var width = canvas.width - margin.left - margin.right;
+        var height = canvas.height - margin.top - margin.bottom;
+        var ctx = canvas.getContext("2d");
+        var colors = function(i) {
+            var colors = ["red", "orange", "purple"];
+            return colors[i % colors.length];
+        };
+        var data = [
+            {
+                name: "东北",
+                value: [
+                    { name: "办公用品", value: 100 },
+                    { name: "家具", value: 56 },
+                    { name: "技术", value: 60 },
+                    { name: "萝卜", value: 56 },
+                    { name: "白菜", value: 70 },
+                    { name: "西瓜", value: 80 },
+                    { name: "豆腐", value: 72 }
+                ]
+            },
+            {
+                name: "华北",
+                value: [
+                    { name: "办公用品", value: 82 },
+                    { name: "家具", value: 80 },
+                    { name: "技术", value: 96 },
+                    { name: "萝卜", value: 73 },
+                    { name: "白菜", value: 72 },
+                    { name: "西瓜", value: 83 },
+                    { name: "豆腐", value: 86 }
+                ]
+            },
+            {
+                name: "西南",
+                value: [
+                    { name: "办公用品", value: 73 },
+                    { name: "家具", value: 94 },
+                    { name: "技术", value: 80 },
+                    { name: "萝卜", value: 94 },
+                    { name: "白菜", value: 60 },
+                    { name: "西瓜", value: 70 },
+                    { name: "豆腐", value: 68 }
+                ]
+            }
+        ];
+        var xAxis = d3
+            .scaleBand()
+            .domain(data[0].value.map(function(d) {
+                return d.name;
+            }))
+            .rangeRound([0, width])
+            .padding(0.5);
+        var yAxis = d3
+            .scaleLinear()
+            .domain([0, d3.max(data, function(d0) {
+                return d3.max(d0.value, function(d1) {
+                    return d1.value;
+                });
+            })])
+            .range([height, 0]);
+        var yTicks = yAxis.ticks(10);
+        var radius = 5;
+        var pathArray = [];
+
+        function init() {
+            pathArray = [];
+            data.forEach(function(d0, index) {
+                var points = [];
+                d0.value.forEach(function(d1) {
+                    var x = xAxis(d1.name) + xAxis.bandwidth() / 2;
+                    var y = yAxis(d1.value);
+                    points.push({x, y});
+                });
+                pathArray.push(new Path(points, index));
+            });
+        }
+
+        function Path(points, index) {
+            var _self = this;
+            _self.points = points;
+            _self.index = index;
+            _self.draw = function() {
+                ctx.beginPath();
+                ctx.strokeStyle = colors(_self.index);
+                for (var i = 0; i < _self.points.length; i++) {
+                    var point = _self.points[i];
+                    if (i === 0) {
+                        ctx.moveTo(point.x, point.y);
+                    } else {
+                        ctx.lineTo(point.x, point.y);
+                    }
+                }
+                ctx.stroke();
+            }
+            _self.animate = function(num) {
+                ctx.beginPath();
+                ctx.strokeStyle = colors(_self.index);
+                for (var i = 0; i < num; i++) {
+                    var point = _self.points[i];
+                    if (i === 0) {
+                        ctx.moveTo(point.x, point.y);
+                    } else {
+                        ctx.lineTo(point.x, point.y);
+                    }
+                }
+                ctx.stroke();
+            }
+        }
+        
+        function drawChart(num) {
+            ctx.save();
+
+            // 图形区域平移
+            ctx.translate(margin.left, margin.top);
+            
+            // X轴
+            ctx.beginPath();
+            ctx.strokeStyle = "#999";
+            ctx.lineWidth = 1;
+            ctx.fillStyle = "#999";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "top";
+            xAxis.domain().forEach(function(d) {
+                ctx.moveTo(xAxis(d) + xAxis.bandwidth() / 2, height);
+                ctx.lineTo(xAxis(d) + xAxis.bandwidth() / 2, 0);
+                ctx.fillText(d, xAxis(d) + xAxis.bandwidth() / 2, height + 23);
+            });
+            ctx.stroke();
+                
+            // Y轴
+            ctx.beginPath();
+            yTicks.forEach(function(d) {
+                ctx.moveTo(0, yAxis(d));
+                ctx.lineTo(width, yAxis(d));
+            });
+            ctx.stroke();
+            ctx.textAlign = "right";
+            ctx.textBaseline = "middle";
+            yTicks.forEach(function(d) {
+                ctx.fillText(d, -5, yAxis(d));
+            });
+            
+            // 画折线
+            pathArray.forEach(function(path) {
+                path.animate(num);
+            })
+
+            ctx.restore();
+        }
+
+        init();
+
+        var num = 0;
+        var myReq = null;
+        var timer =  setInterval(function () {
+            if (num <= 7) {
+                drawChart(num);
+            } else {
+                num = 0;
+                clearInterval(timer);
+            }
+            num++;
+        }, 200/7);
+    </script>
+</html>

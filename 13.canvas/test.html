@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <style>
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+            }
+            .chart-container {
+                position: absolute;
+                top: 50px;
+                right: 50px;
+                bottom: 50px;
+                left: 50px;
+                background-color: #eee;
+            }
+            .chart-container canvas {
+                min-width: 100%;
+                max-width: 100%;
+                min-height: 100%;
+                max-height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="chart-container">
+            <canvas></canvas>
+        </div>
+    </body>
+    <script src="https://cdn.bootcss.com/d3/5.9.2/d3.js"></script>
+    <script>
+        function draw() {
+            var data = [
+                {
+                    name: "东北",
+                    value: [
+                        { name: "办公用品", value: 100 },
+                        { name: "家具", value: 56 },
+                        { name: "技术", value: 60 }
+                    ]
+                },
+                {
+                    name: "华北",
+                    value: [
+                        { name: "办公用品", value: 82 },
+                        { name: "家具", value: 80 },
+                        { name: "技术", value: 72 }
+                    ]
+                },
+                {
+                    name: "西南",
+                    value: [
+                        { name: "办公用品", value: 73 },
+                        { name: "家具", value: 94 },
+                        { name: "技术", value: 60 }
+                    ]
+                }
+            ];
+            var chartContainer = document.querySelector(".chart-container");
+            var canvas = chartContainer.querySelector("canvas");
+            var containerWidth = chartContainer.offsetWidth;
+            var containerHeight = chartContainer.offsetHeight;
+
+            canvas.setAttribute("width", containerWidth);
+            canvas.setAttribute("height", containerHeight);
+
+            var context = canvas.getContext("2d");
+            var margin = { top: 25, right: 20, bottom: 45, left: 40 };
+            var width = canvas.width - margin.left - margin.right;
+            var height = canvas.height - margin.top - margin.bottom;
+            
+            // 比例尺
+            var xAxis0 = d3
+                .scaleBand()
+                .domain( data.map(function(d) {
+                    return d.name;
+                }))
+                .rangeRound([0, width]);
+            var xAxis1 = d3
+                .scaleBand()
+                .domain(data[0].value.map(function(d) {
+                    return d.name;
+                }))
+                .rangeRound([0, xAxis0.bandwidth()])
+                .padding(0.5);
+            var yAxis = d3
+                .scaleLinear()
+                .domain([0, d3.max(data, function(d0) {
+                    return d3.max(d0.value, function(d1) {
+                        return d1.value;
+                    });
+                })])
+                .range([height, 0]);
+
+            context.translate(margin.left, margin.top);
+            
+            // X轴
+            context.beginPath();
+            context.strokeStyle = "pink";
+            context.fillStyle = "orange";
+            context.textAlign = "center";
+            context.textBaseline = "top";
+            xAxis0.domain().forEach(function(d) {
+                context.fillText(d, xAxis0(d) + xAxis0.bandwidth() / 2, height + 23);
+            });
+            data.forEach(function(d0) {
+                var pX0 = xAxis0(d0.name);
+                d0.value.forEach(function(d1) {
+                    // context.moveTo(pX0 + xAxis1(d1.name) + xAxis1.bandwidth() / 2, height);
+                    // context.lineTo(pX0 + xAxis1(d1.name) + xAxis1.bandwidth() / 2, 0);
+                    context.fillText(d1.name,pX0 + xAxis1(d1.name) + xAxis1.bandwidth() / 2, height + 6);
+                });
+            });
+            // context.stroke();
+            // X轴 end
+
+            
+            // Y轴
+            var yTicks = yAxis.ticks(10);
+            context.beginPath();
+            yTicks.forEach(function(d) {
+                context.moveTo(0, yAxis(d));
+                context.lineTo(width, yAxis(d));
+            });
+            context.stroke();
+            context.textAlign = "right";
+            context.textBaseline = "middle";
+            yTicks.forEach(function(d) {
+                context.fillText(d, -9, yAxis(d));
+            });
+            // Y轴 end
+
+            context.fillStyle = "steelblue";
+            data.forEach(function(d0) {
+                var pX0 = xAxis0(d0.name);
+                d0.value.forEach(function(d1) {
+                    var pX1 = pX0 + xAxis1(d1.name);
+                    var pY1 = yAxis(d1.value);
+                    var pWidth = xAxis1.bandwidth();
+                    var pHeight = height - yAxis(d1.value);
+                    context.fillRect(pX1, pY1, pWidth, pHeight);
+                });
+            });
+        }
+    
+        draw();
+
+        var timer = null;
+        window.addEventListener("resize", function() {
+            if (timer) clearTimeout(timer);
+            timer = setTimeout(function() {
+                draw();
+            }, 200);
+        })
+    </script>
+</html>

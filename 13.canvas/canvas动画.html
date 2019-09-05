@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <style>
+            html,
+            body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+            }
+            .chart-container {
+                position: absolute;
+                top: 50px;
+                right: 50px;
+                bottom: 50px;
+                left: 50px;
+                background-color: #eee;
+            }
+            .chart-container canvas {
+                min-width: 100%;
+                min-height: 100%;
+                max-width: 100%;
+                max-height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="chart-container">
+            <canvas></canvas>
+        </div>
+    </body>
+    <script src="https://cdn.bootcss.com/d3/5.9.2/d3.js"></script>
+    <script>
+        var chartContainer = document.querySelector(".chart-container");
+        var canvas = chartContainer.querySelector("canvas");
+        canvas.setAttribute("width", chartContainer.offsetWidth);
+        canvas.setAttribute("height", chartContainer.offsetHeight);
+
+        var context = canvas.getContext("2d");
+
+        var x = 20;
+        var speed = 4;
+        // 电脑的帧率是1秒钟60Hz， 就相当于一秒钟可以播放60张图片，就相当于播放一张图片使用16.7ms
+        function draw() {
+            // 1. 先把画布清空
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 2. 画小球
+            context.beginPath();
+            var gradient = context.createRadialGradient(x - 10, 190, 0, x, 200, 20);
+            gradient.addColorStop(0, "#fff");
+            gradient.addColorStop(1, "#333");
+            context.fillStyle = gradient;
+            context.arc(x, 200, 20, 0, 2 * Math.PI);
+            context.fill();
+            
+            // 3. x要移动
+            x += speed;
+            if (x > canvas.width - 20 || x < 20) {
+                speed = -speed;
+            }
+            // 被优化过的动画执行方向 1.递归调用；2.可以自适应浏览器的刷新的帧率
+            window.requestAnimationFrame(draw);
+        }
+        draw();
+    </script>
+</html>
